@@ -60,9 +60,12 @@ async def get_vendors(
                    response_description="Vendor details",
                    status_code=200)
 async def get_vendor(vendor_id: int):
-    query = None
-    result = None
-    row = None
+    query = (
+        select(VendorInformation)
+        .filter(VendorInformation.vendor_id == vendor_id)
+    )
+    result = await db.execute(query)
+    row = result.first()
 
     return Vendor(
         vendor_identifier=row.vendor_identifier,
