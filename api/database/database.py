@@ -24,4 +24,13 @@ DATABASE_URL = (
     f"@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
 )
 
-
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=True,
+    future=True,
+    pool_size=POOL_SIZE,
+    max_overflow=MAX_OVERFLOW,
+    pool_timeout=POOL_TIMEOUT,
+    pool_recycle=POOL_RECYCLE,
+    pool_pre_ping=True,
+)
