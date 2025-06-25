@@ -6,12 +6,12 @@ from api.database.database import Base
 
 
 class Enumerations(Base):
-    pass
+    __tablename__ = 'enumerations'
 
 
 class Vendors(Base):
-    pass
+    __tablename__ = 'vendors'
 
 
 class VendorInformation(Base):
-    pass
+    __tablename__ = 'vendor_infos'
