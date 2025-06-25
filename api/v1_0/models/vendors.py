@@ -44,7 +44,7 @@ class VendorInformation(Base):
     is_active = Column(Boolean)
     purchase_count = Column(Integer)
     products_count = Column(Integer)
-    sold_count = Column(Integer)
+    sold_products = Column(Integer)
     same_city_orders = Column(Integer)
     vendor_url = Column(String)
     city_name = Column(String)
