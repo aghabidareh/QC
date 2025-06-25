@@ -18,7 +18,7 @@ class Vendor(BaseModel):
 
 
 class Vendors(BaseModel):
-    vendors = List[Vendor]
+    vendors: List[Vendor]
     count: int
 
 
