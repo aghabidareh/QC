@@ -93,4 +93,4 @@ class VendorUpdate(BaseModel):
 
 
 class Message(BaseModel):
-    pass
+    message: str
