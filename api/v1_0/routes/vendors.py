@@ -21,7 +21,15 @@ async def get_vendors(
         offset: int = Query(0, ge=0),
         db: AsyncSession = Depends(get_db),
 ):
-    pass
+    count_query = None
+    count_result = None
+    total_count = None
+
+    query = None
+    result = None
+    rows = None
+
+
 
 
 @vendor_router.get("/{vendor_id}", response_model=Vendor,
