@@ -40,7 +40,7 @@ async def get_vendors(
 
     vendors =[
         Vendor(
-            vendor_identifier=vendor.vendor_identifier,
+            vendor_identifier=vendor.vendor_id,
             vendor_name_english=vendor.vendor_name_english,
             vendor_name_persian=vendor.vendor_name_persian,
             phone_number_of_owner=vendor.phone_number_of_owner,
@@ -71,7 +71,7 @@ async def get_vendor(
     row = result.first()
 
     return Vendor(
-        vendor_identifier=row.vendor_identifier,
+        vendor_identifier=row.vendor_id,
         vendor_name_english=row.vendor_name_english,
         vendor_name_persian=row.vendor_name_persian,
         phone_number_of_owner=row.phone_number_of_owner,
