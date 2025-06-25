@@ -60,6 +60,10 @@ async def get_vendors(
                    response_description="Vendor details",
                    status_code=200)
 async def get_vendor(vendor_id: int):
+    query = None
+    result = None
+    row = None
+
     pass
 
 
