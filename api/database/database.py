@@ -17,3 +17,6 @@ from api.database.configs import (
     POOL_RECYCLE,
 )
 
+logger = logging.getLogger(__name__)
+
+
