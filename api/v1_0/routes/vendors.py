@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 
-from api.v1_0.schemas.vnedors import Vendors, Vendor, Message, VendorCreate
+from api.v1_0.schemas.vnedors import Vendors, Vendor, Message, VendorCreate, VendorUpdate
 
 vendor_router = APIRouter(prefix="/vendors", tags=["Vendors"])
 logger = logging.getLogger(__name__)
@@ -38,7 +38,12 @@ async def create_vendor(vendor_info: VendorCreate):
                     description="Add new vendors whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
-async def create_vendors_multiple():
+async def create_vendors_multiple(vendor_infos: [VendorCreate]):
     pass
 
-
+@vendor_router.put("/update/{vendor_id}", response_model=Message,
+                   description="Update a specific vendor",
+                   response_description="Success Message",
+                   status_code=200)
+async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
+    pass
