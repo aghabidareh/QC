@@ -44,4 +44,5 @@ SessionLocal = sessionmaker(
 Base = declarative_base()
 database = Database(DATABASE_URL)
 
-
+async def get_db():
+    pass
