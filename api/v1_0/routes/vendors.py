@@ -4,8 +4,11 @@ from typing import List
 
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.sql import func
 
 from api.database.database import get_db
+from api.v1_0.models.vendors import VendorInformation
 from api.v1_0.schemas.vnedors import Vendors, Vendor, Message, VendorCreate, VendorUpdate
 
 vendor_router = APIRouter(prefix="/vendors", tags=["Vendors"])
@@ -21,9 +24,9 @@ async def get_vendors(
         offset: int = Query(0, ge=0),
         db: AsyncSession = Depends(get_db),
 ):
-    count_query = None
-    count_result = None
-    total_count = None
+    count_query = select(func.count(func.distinct(VendorInformation.id))).select_from(Vendors)
+    count_result = await db.execute(count_query)
+    total_count = count_result.scalar()
 
     query = None
     result = None
