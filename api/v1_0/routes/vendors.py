@@ -27,9 +27,18 @@ async def get_vendor(vendor_id: int):
 async def get_vendors_search():
     pass
 
-@vendor_router.post("/", response_model=Message,
+@vendor_router.post("/add", response_model=Message,
                     description="Create a new vendor whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
 async def create_vendor(vendor_info: VendorCreate):
     pass
+
+@vendor_router.post("/add-multiple", response_model=Message,
+                    description="Add new vendors whom want to connect to Quick Commerce in Basalam",
+                    response_description="Success Message",
+                    status_code=201)
+async def create_vendors_multiple():
+    pass
+
+
