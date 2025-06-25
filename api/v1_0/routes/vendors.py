@@ -64,6 +64,17 @@ async def get_vendor(vendor_id: int):
     result = None
     row = None
 
+    return Vendor(
+        vendor_identifier=row.vendor_identifier,
+        vendor_name_english=row.vendor_name_english,
+        vendor_name_persian=row.vendor_name_persian,
+        phone_number_of_owner=row.phone_number_of_owner,
+        the_number_of_products=row.the_number_of_products,
+        the_number_of_purchase=row.the_number_of_purchase,
+        the_number_of_sold_products=row.the_number_of_sold_products,
+        is_active=row.is_active,
+    )
+
     pass
 
 
