@@ -9,4 +9,5 @@ class VendorsBase(BaseModel):
 
 
 class Vendors(BaseModel):
-    pass
+    vendors = List[VendorsBase]
+    count: int
