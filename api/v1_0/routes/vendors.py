@@ -43,6 +43,8 @@ async def get_vendors(
         for vendor in rows
     ]
 
+    return Vendors(count=total_count, vendors=vendors)
+
 
 @vendor_router.get("/{vendor_id}", response_model=Vendor,
                    description="Get a specific vendor",
