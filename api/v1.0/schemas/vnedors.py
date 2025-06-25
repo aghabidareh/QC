@@ -11,7 +11,7 @@ class VendorsBase(BaseModel):
 
     @field_validator('phone_number_of_owner')
     @classmethod
-    def validate_phone_number(cls, v):
+    def validate_phone_number(cls, value):
         pattern = re.compile(r"^09\d{9}$")
         if not re.match(pattern, value):
             raise ValueError("شماره تلفن معتبر نمی‌باشد! باید با 09 شروع شود و 11 رقم باشد.")
