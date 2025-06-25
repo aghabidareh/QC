@@ -5,10 +5,13 @@ import re
 
 class VendorsBase(BaseModel):
     vendor_identifier: int
-    vendor_name: str
+    vendor_name_persian: str
+    vendor_name_english: str
     phone_number_of_owner: str
     is_active: bool
     the_number_of_purchase: int
+    the_number_of_products: int
+    the_number_of_sold_products: int
 
     @field_validator('phone_number_of_owner')
     @classmethod
@@ -21,6 +24,10 @@ class VendorsBase(BaseModel):
             raise ValueError("شماره تلفن باید فقط شامل اعداد انگلیسی (0-9) باشد.")
 
         return value
+
+    class Config:
+        from_attributes = True
+
 
 class Vendors(BaseModel):
     vendors = List[VendorsBase]
