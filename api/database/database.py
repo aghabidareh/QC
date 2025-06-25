@@ -69,4 +69,10 @@ async def get_db():
         logger.debug(f"Session {id(session)} closed")
 
 async def init_db():
-    pass
+    async with engine.begin() as conn:
+        try:
+            await conn.run_sync(Base.metadata.create_all)
+            logger.info("Database tables created successfully")
+        except Exception as e:
+            logger.error(f"Failed to create database tables: {str(e)}")
+            raise
