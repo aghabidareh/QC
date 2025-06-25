@@ -77,3 +77,10 @@ async def delete_vendor(vendor_id: int):
                       status_code=200)
 async def delete_vendors_multiple(vendor_ids: [int]):
     pass
+
+@vendor_router.delete("/delete-all", response_model=Message,
+                      description="Delete all vendors",
+                      response_description="Success Message",
+                      status_code=200)
+async def delete_all_vendors():
+    pass
