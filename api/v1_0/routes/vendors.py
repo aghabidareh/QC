@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import logging
 
-from api.v1_0.schemas.vnedors import Vendors, Vendor
+from api.v1_0.schemas.vnedors import Vendors, Vendor, Message, VendorCreate
 
 vendor_router = APIRouter(prefix="/vendors", tags=["Vendors"])
 logger = logging.getLogger(__name__)
@@ -27,4 +27,9 @@ async def get_vendor(vendor_id: int):
 async def get_vendors_search():
     pass
 
-
+@vendor_router.post("/", response_model=Message,
+                    description="Create a new vendor whom want to connect to Quick Commerce in Basalam",
+                    response_description="Success Message",
+                    status_code=201)
+async def create_vendor(vendor_info: VendorCreate):
+    pass
