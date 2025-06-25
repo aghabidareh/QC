@@ -33,11 +33,69 @@ class Vendors(BaseModel):
     vendors = List[VendorsBase]
     count: int
 
+
 class VendorCreate(BaseModel):
-    pass
+    vendor_identifier: int
+    vendor_name_persian: str
+    vendor_name_english: str
+    phone_number_of_owner: str
+    is_active: bool
+    the_number_of_purchase: int
+    the_number_of_products: int
+    the_number_of_sold_products: int
+
+    @field_validator('phone_number_of_owner')
+    @classmethod
+    def validate_phone_number(cls, value):
+        pattern = re.compile(r"^09\d{9}$")
+        if not re.match(pattern, value):
+            raise ValueError("شماره تلفن معتبر نمی‌باشد! باید با 09 شروع شود و 11 رقم باشد.")
+
+        if not value.isascii() or not value.isdigit():
+            raise ValueError("شماره تلفن باید فقط شامل اعداد انگلیسی (0-9) باشد.")
+
+        return value
+
+    @field_validator('vendor_name_persian')
+    @classmethod
+    def validate_vendor_name_persian(cls, value):
+        length_of_vendor_name_persian = len(value)
+        if length_of_vendor_name_persian < 6:
+            raise ValueError("در اسم فارسی یک غرفه، حروف نمیتوانند کمتر از ۶ کاراکتر باشند!")
+
+        if length_of_vendor_name_persian > 90:
+            raise ValueError("در اسم فارسی یک غرفه، تعداد حروف نمیتواند از ۹۰ کاراکتر تخطی کند.")
+
+        return value
+
+    @field_validator('vendor_name_english')
+    @classmethod
+    def validate_vendor_name_english(cls, value):
+        length_of_vendor_name_english = len(value)
+        if length_of_vendor_name_english < 3:
+            raise ValueError("در اسم انگلیسی یک غرفه، حروف نمیتوانند کمتر از ۳ کاراکتر باشند!")
+
+        if length_of_vendor_name_english > 120:
+            raise ValueError("در اسم انگلیسی یک غرفه، تعداد حروف نمیتواند از ۱۲۰ کاراکتر تخطی کند.")
+
+        return value
+
+    @field_validator('phone_number_of_owner')
+    @classmethod
+    def validate_phone_number(cls, value):
+        pattern = re.compile(r"^09\d{9}$")
+        if not re.match(pattern, value):
+            raise ValueError("شماره تلفن معتبر نمی‌باشد! باید با 09 شروع شود و 11 رقم باشد.")
+
+        if not value.isascii() or not value.isdigit():
+            raise ValueError("شماره تلفن باید فقط شامل اعداد انگلیسی (0-9) باشد.")
+
+        return value
+
 
 class VendorUpdate(BaseModel):
     pass
+
 
 class Message(BaseModel):
     pass
