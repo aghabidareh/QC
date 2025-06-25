@@ -35,3 +35,6 @@ class Vendors(BaseModel):
 
 class VendorCreate(BaseModel):
     pass
+
+class VendorUpdate(BaseModel):
+    pass
