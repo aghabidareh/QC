@@ -5,7 +5,13 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
 import os
 
-app = FastAPI()
+from api.v1_0.routes.vendors import vendor_router
+
+app = FastAPI(title="QC",
+              description="API for QC(q-commerce) project for basalam",
+              version="1.0",)
+
+app.include_router(vendor_router)
 
 BASE_DIR = Path(__file__).resolve().parent
 static_path = os.path.join(BASE_DIR, 'resources')
