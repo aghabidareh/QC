@@ -34,3 +34,11 @@ engine = create_async_engine(
     pool_recycle=POOL_RECYCLE,
     pool_pre_ping=True,
 )
+
+SessionLocal = sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+)
+
+
