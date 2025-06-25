@@ -38,3 +38,6 @@ class VendorCreate(BaseModel):
 
 class VendorUpdate(BaseModel):
     pass
+
+class Message(BaseModel):
+    pass
