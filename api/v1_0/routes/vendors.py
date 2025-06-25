@@ -90,9 +90,13 @@ async def get_vendors_search(
         vendor_name: str = Query(None, description="the user can search english or persian name, both"),
         db: AsyncSession = Depends(get_db),
 ):
-    query = None
-    results = None
-    rows = None
+    query = (
+        select(VendorInformation)
+        .filter(VendorInformation.vendor_persian_name.ilike(f"%{vendor_name}%")
+                or VendorInformation.vendor_persian_name.ilike(f"%{vendor_name}%"))
+    )
+    results = await db.execute(query)
+    rows = results.fetchall()
 
     vendors = [
         Vendor(
