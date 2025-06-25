@@ -6,12 +6,14 @@ from api.v1_0.schemas.vnedors import Vendors, Vendor, Message, VendorCreate, Ven
 vendor_router = APIRouter(prefix="/vendors", tags=["Vendors"])
 logger = logging.getLogger(__name__)
 
+
 @vendor_router.get("/", response_model=Vendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
 async def get_vendors():
     pass
+
 
 @vendor_router.get("/{vendor_id}", response_model=Vendor,
                    description="Get a specific vendor",
@@ -20,12 +22,14 @@ async def get_vendors():
 async def get_vendor(vendor_id: int):
     pass
 
+
 @vendor_router.get("/search", response_model=Vendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam which is searched",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
 async def get_vendors_search():
     pass
+
 
 @vendor_router.post("/add", response_model=Message,
                     description="Create a new vendor whom want to connect to Quick Commerce in Basalam",
@@ -34,12 +38,14 @@ async def get_vendors_search():
 async def create_vendor(vendor_info: VendorCreate):
     pass
 
+
 @vendor_router.post("/add-multiple", response_model=Message,
                     description="Add new vendors whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
 async def create_vendors_multiple(vendor_infos: [VendorCreate]):
     pass
+
 
 @vendor_router.put("/update/{vendor_id}", response_model=Message,
                    description="Update a specific vendor",
@@ -48,12 +54,14 @@ async def create_vendors_multiple(vendor_infos: [VendorCreate]):
 async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
     pass
 
+
 @vendor_router.put("/update-multiple", response_model=Message,
                    description="Update a specific vendors",
                    response_description="Success Message",
                    status_code=200)
 async def update_vendors_multiple(vendor_infos: [VendorUpdate]):
     pass
+
 
 @vendor_router.delete("/delete/{vendor_id}", response_model=Message,
                       description="Delete a specific vendor",
@@ -63,3 +71,9 @@ async def delete_vendor(vendor_id: int):
     pass
 
 
+@vendor_router.delete("/delete-multiple", response_model=Message,
+                      description="Delete a specific vendors",
+                      response_description="Success Message",
+                      status_code=200)
+async def delete_vendors_multiple(vendor_ids: [int]):
+    pass
