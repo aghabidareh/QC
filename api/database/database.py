@@ -19,4 +19,9 @@ from api.database.configs import (
 
 logger = logging.getLogger(__name__)
 
+DATABASE_URL = (
+    f"postgresql+asyncpg://{DATABASE_USERNAME}:{DATABASE_PASSWORD}"
+    f"@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}"
+)
+
 
