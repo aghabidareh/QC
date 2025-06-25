@@ -28,9 +28,15 @@ async def get_vendors(
     count_result = await db.execute(count_query)
     total_count = count_result.scalar()
 
-    query = None
-    result = None
-    rows = None
+    query = (
+        select(VendorInformation)
+        .distinct(VendorInformation.id)
+        .order_by(VendorInformation.id)
+        .limit(limit)
+        .offset(offset)
+    )
+    result = await db.execute(query)
+    rows = result.fetchall()
 
     vendors =[
         Vendor(
