@@ -36,17 +36,17 @@ async def get_vendors(
         .offset(offset)
     )
     result = await db.execute(query)
-    rows = result.fetchall()
+    rows = result.scalars().all()
 
-    vendors =[
+    vendors = [
         Vendor(
             vendor_identifier=vendor.vendor_id,
-            vendor_name_english=vendor.vendor_name_english,
-            vendor_name_persian=vendor.vendor_name_persian,
-            phone_number_of_owner=vendor.phone_number_of_owner,
-            the_number_of_products=vendor.the_number_of_products,
-            the_number_of_purchase=vendor.the_number_of_purchase,
-            the_number_of_sold_products=vendor.the_number_of_sold_products,
+            vendor_name_english=vendor.vendor_english_name,
+            vendor_name_persian=vendor.vendor_persian_name,
+            phone_number_of_owner=vendor.vendor_phone_number,
+            the_number_of_products=vendor.products_count,
+            the_number_of_purchase=vendor.purchase_count,
+            the_number_of_sold_products=vendor.sold_products,
             is_active=vendor.is_active,
         )
         for vendor in rows
@@ -161,6 +161,7 @@ async def delete_vendor(vendor_id: int):
                       status_code=200)
 async def delete_vendors_multiple(vendor_ids: List[int]):
     pass
+
 
 @vendor_router.delete("/delete-all", response_model=Message,
                       description="Delete all vendors",
