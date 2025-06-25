@@ -4,24 +4,31 @@ from fastapi import FastAPI, applications
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
 import os
+from fastapi.middleware.cors import CORSMiddleware
 
 from api.database.database import database
 from api.v1_0.routes.vendors import vendor_router
 
 app = FastAPI(title="QC",
               description="API for QC(q-commerce) project for basalam",
-              version="1.0",)
+              version="1.0", )
 
 app.include_router(vendor_router)
 
-BASE_DIR = Path(__file__).resolve().parent
-static_path = os.path.join(BASE_DIR, 'resources')
-
+CORS_ORIGINS = os.getenv("CORS_ORIGINS").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.on_event("startup")
 async def startup():
     await database.connect()
+
 
 @app.on_event("shutdown")
 async def shutdown():
@@ -38,7 +45,8 @@ async def say_hello(name: str):
     return {"message": f"Hello {name}"}
 
 
-
+BASE_DIR = Path(__file__).resolve().parent
+static_path = os.path.join(BASE_DIR, 'resources')
 
 app.mount("/static", StaticFiles(directory=static_path), name="static")
 
