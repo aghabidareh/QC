@@ -108,7 +108,7 @@ async def get_vendors_search(
         for vendor in rows
     ]
 
-
+    return Vendors(count=len(vendors), vendors=vendors)
 
 
 @vendor_router.post("/add", response_model=Message,
