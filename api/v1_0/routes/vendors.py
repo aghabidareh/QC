@@ -1,7 +1,11 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 import logging
 from typing import List
 
+from fastapi.params import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from api.database.database import get_db
 from api.v1_0.schemas.vnedors import Vendors, Vendor, Message, VendorCreate, VendorUpdate
 
 vendor_router = APIRouter(prefix="/vendors", tags=["Vendors"])
@@ -12,7 +16,11 @@ logger = logging.getLogger(__name__)
                    description="Get all vendors connected to the Quick Commerce in Basalam",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
-async def get_vendors():
+async def get_vendors(
+        limit: int = Query(10, ge=1, le=100),
+        offset: int = Query(0, ge=0),
+        db: AsyncSession = Depends(get_db),
+):
     pass
 
 
