@@ -82,7 +82,14 @@ class VendorCreate(BaseModel):
 
 
 class VendorUpdate(BaseModel):
-    pass
+    vendor_identifier: Optional[int]
+    vendor_name_persian: Optional[str]
+    vendor_name_english: Optional[str]
+    phone_number_of_owner: Optional[str]
+    is_active: Optional[bool]
+    the_number_of_purchase: Optional[int]
+    the_number_of_products: Optional[int]
+    the_number_of_sold_products: Optional[int]
 
 
 class Message(BaseModel):
