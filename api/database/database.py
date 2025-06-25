@@ -41,4 +41,7 @@ SessionLocal = sessionmaker(
     expire_on_commit=False,
 )
 
+Base = declarative_base()
+database = Database(DATABASE_URL)
+
 
