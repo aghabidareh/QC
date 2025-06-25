@@ -68,7 +68,7 @@ async def get_vendor(
         .filter(VendorInformation.vendor_id == vendor_id)
     )
     result = await db.execute(query)
-    row = result.first()
+    row = result.scalar()
 
     return Vendor(
         vendor_identifier=row.vendor_id,
@@ -96,7 +96,7 @@ async def get_vendors_search(
                 or VendorInformation.vendor_persian_name.ilike(f"%{vendor_name}%"))
     )
     results = await db.execute(query)
-    rows = results.fetchall()
+    rows = results.scalars().all()
 
     vendors = [
         Vendor(
