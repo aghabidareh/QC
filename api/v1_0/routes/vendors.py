@@ -19,3 +19,12 @@ async def get_vendors():
                    status_code=200)
 async def get_vendor(vendor_id: int):
     pass
+
+@vendor_router.get("/search", response_model=Vendors,
+                   description="Get all vendors connected to the Quick Commerce in Basalam which is searched",
+                   response_description="All vendors connected to the Quick Commerce in Basalam",
+                   status_code=200)
+async def get_vendors_search():
+    pass
+
+
