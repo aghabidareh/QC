@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 import logging
+from typing import List
 
 from api.v1_0.schemas.vnedors import Vendors, Vendor, Message, VendorCreate, VendorUpdate
 
@@ -43,7 +44,7 @@ async def create_vendor(vendor_info: VendorCreate):
                     description="Add new vendors whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
-async def create_vendors_multiple(vendor_infos: [VendorCreate]):
+async def create_vendors_multiple(vendor_infos: List[VendorCreate]):
     pass
 
 
@@ -59,7 +60,7 @@ async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
                    description="Update a specific vendors",
                    response_description="Success Message",
                    status_code=200)
-async def update_vendors_multiple(vendor_infos: [VendorUpdate]):
+async def update_vendors_multiple(vendor_infos: List[VendorUpdate]):
     pass
 
 
@@ -75,7 +76,7 @@ async def delete_vendor(vendor_id: int):
                       description="Delete a specific vendors",
                       response_description="Success Message",
                       status_code=200)
-async def delete_vendors_multiple(vendor_ids: [int]):
+async def delete_vendors_multiple(vendor_ids: List[int]):
     pass
 
 @vendor_router.delete("/delete-all", response_model=Message,
