@@ -24,7 +24,7 @@ async def get_vendors(
         offset: int = Query(0, ge=0),
         db: AsyncSession = Depends(get_db),
 ):
-    count_query = select(func.count(func.distinct(VendorInformation.id))).select_from(Vendors)
+    count_query = select(func.count(func.distinct(VendorInformation.id))).select_from(VendorInformation)
     count_result = await db.execute(count_query)
     total_count = count_result.scalar()
 
