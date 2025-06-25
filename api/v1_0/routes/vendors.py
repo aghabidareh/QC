@@ -90,7 +90,11 @@ async def get_vendors_search(
         vendor_name: str = Query(None, description="the user can search english or persian name, both"),
         db: AsyncSession = Depends(get_db),
 ):
-    pass
+    query = None
+    results = None
+    rows = None
+
+
 
 
 @vendor_router.post("/add", response_model=Message,
