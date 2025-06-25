@@ -68,4 +68,5 @@ async def get_db():
         await session.close()
         logger.debug(f"Session {id(session)} closed")
 
-
+async def init_db():
+    pass
