@@ -47,3 +47,12 @@ async def create_vendors_multiple(vendor_infos: [VendorCreate]):
                    status_code=200)
 async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
     pass
+
+@vendor_router.put("/update-multiple", response_model=Message,
+                   description="Update a specific vendors",
+                   response_description="Success Message",
+                   status_code=200)
+async def update_vendors_multiple(vendor_infos: [VendorUpdate]):
+    pass
+
+
