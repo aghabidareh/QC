@@ -4,14 +4,14 @@ import re
 
 
 class Vendor(BaseModel):
-    vendor_identifier: int
-    vendor_name_persian: str
-    vendor_name_english: str
-    phone_number_of_owner: str
-    is_active: bool
-    the_number_of_purchase: int
-    the_number_of_products: int
-    the_number_of_sold_products: int
+    vendor_identifier: Optional[int]
+    vendor_name_persian: Optional[str]
+    vendor_name_english: Optional[str]
+    phone_number_of_owner: Optional[str]
+    is_active: Optional[bool]
+    the_number_of_purchase: Optional[int]
+    the_number_of_products: Optional[int]
+    the_number_of_sold_products: Optional[int]
 
     class Config:
         from_attributes = True
@@ -23,14 +23,14 @@ class Vendors(BaseModel):
 
 
 class VendorCreate(BaseModel):
-    vendor_identifier: int
-    vendor_name_persian: str
-    vendor_name_english: str
-    phone_number_of_owner: str
-    is_active: bool
-    the_number_of_purchase: int
-    the_number_of_products: int
-    the_number_of_sold_products: int
+    vendor_identifier: Optional[int]
+    vendor_name_persian: Optional[str]
+    vendor_name_english: Optional[str]
+    phone_number_of_owner: Optional[str]
+    is_active: Optional[bool]
+    the_number_of_purchase: Optional[int]
+    the_number_of_products: Optional[int]
+    the_number_of_sold_products: Optional[int]
 
     @field_validator('phone_number_of_owner')
     @classmethod
