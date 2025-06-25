@@ -11,7 +11,7 @@ class Enumerations(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     parent_id = Column(Integer, ForeignKey('enumerations.id', cascade="all, delete-orphan", ondelete="CASCADE"))
     text = Column(String)
-    extra = Column(Json)
+    extra = Column(JSON)
     status = Column(Boolean)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, onupdate=datetime.now)
@@ -26,7 +26,7 @@ class Vendors(Base):
     profile_id = Column(Integer, ForeignKey('enumerations.id', ondelete="CASCADE"))
     working_times = None
     start_date = Column(DateTime)
-    extra = Column(Json)
+    extra = Column(JSON)
     created_at = Column(DateTime, default=datetime.now)
     updated_at = Column(DateTime, onupdate=datetime.now)
     deleted_at = Column(DateTime, onupdate=datetime.now)
