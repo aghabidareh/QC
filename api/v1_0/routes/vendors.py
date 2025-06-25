@@ -72,12 +72,12 @@ async def get_vendor(
 
     return Vendor(
         vendor_identifier=row.vendor_id,
-        vendor_name_english=row.vendor_name_english,
-        vendor_name_persian=row.vendor_name_persian,
-        phone_number_of_owner=row.phone_number_of_owner,
-        the_number_of_products=row.the_number_of_products,
-        the_number_of_purchase=row.the_number_of_purchase,
-        the_number_of_sold_products=row.the_number_of_sold_products,
+        vendor_name_english=row.vendor_english_name,
+        vendor_name_persian=row.vendor_persian_name,
+        phone_number_of_owner=row.vendor_phone_number,
+        the_number_of_products=row.products_count,
+        the_number_of_purchase=row.purchase_count,
+        the_number_of_sold_products=row.sold_products,
         is_active=row.is_active,
     )
 
