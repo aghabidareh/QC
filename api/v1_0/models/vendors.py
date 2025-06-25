@@ -35,3 +35,18 @@ class Vendors(Base):
 
 class VendorInformation(Base):
     __tablename__ = 'vendor_infos'
+
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    vendor_id = Column(Integer)
+    vendor_persian_name = Column(String)
+    vendor_english_name = Column(String)
+    vendor_phone_number = Column(String)
+    is_active = Column(Boolean)
+    purchase_count = Column(Integer)
+    products_count = Column(Integer)
+    sold_count = Column(Integer)
+    same_city_orders = Column(Integer)
+    vendor_url = Column(String)
+    city_name = Column(String)
+    city_id = Column(Integer)
+    user_id = Column(Integer)
