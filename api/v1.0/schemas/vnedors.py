@@ -32,3 +32,6 @@ class VendorsBase(BaseModel):
 class Vendors(BaseModel):
     vendors = List[VendorsBase]
     count: int
+
+class VendorCreate(BaseModel):
+    pass
