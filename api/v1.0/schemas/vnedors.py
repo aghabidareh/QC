@@ -4,6 +4,7 @@ import re
 
 
 class VendorsBase(BaseModel):
+    vendor_identifier: int
     vendor_name: str
     phone_number_of_owner: str
     is_active: bool
