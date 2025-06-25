@@ -45,4 +45,27 @@ Base = declarative_base()
 database = Database(DATABASE_URL)
 
 async def get_db():
-    pass
+    session = SessionLocal()
+    logger.debug(f"Created new AsyncSession: {id(session)}")
+    try:
+        if session.is_active:
+            yield session
+        else:
+            logger.warning(f"Session {id(session)} is not active, attempting rollback")
+            await session.rollback()
+            yield session
+        await session.commit()
+        logger.debug(f"Session {id(session)} committed")
+    except PendingRollbackError as e:
+        logger.error(f"PendingRollbackError in session {id(session)}: {str(e)}")
+        await session.rollback()
+        raise
+    except Exception as e:
+        logger.error(f"Error in session {id(session)}: {str(e)}")
+        await session.rollback()
+        raise
+    finally:
+        await session.close()
+        logger.debug(f"Session {id(session)} closed")
+
+
