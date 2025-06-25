@@ -75,8 +75,6 @@ async def get_vendor(vendor_id: int):
         is_active=row.is_active,
     )
 
-    pass
-
 
 @vendor_router.get("/search", response_model=Vendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam which is searched",
