@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 import logging
-from typing import List
+from typing import List, Optional
 
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -86,7 +86,10 @@ async def get_vendor(
                    description="Get all vendors connected to the Quick Commerce in Basalam which is searched",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
-async def get_vendors_search():
+async def get_vendors_search(
+        vendor_name: str = Query(None, description="the user can search english or persian name, both"),
+        db: AsyncSession = Depends(get_db),
+):
     pass
 
 
