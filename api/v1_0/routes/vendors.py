@@ -59,7 +59,10 @@ async def get_vendors(
                    description="Get a specific vendor",
                    response_description="Vendor details",
                    status_code=200)
-async def get_vendor(vendor_id: int):
+async def get_vendor(
+        vendor_id: int,
+        db: AsyncSession = Depends(get_db),
+):
     query = (
         select(VendorInformation)
         .filter(VendorInformation.vendor_id == vendor_id)
