@@ -55,4 +55,11 @@ async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
 async def update_vendors_multiple(vendor_infos: [VendorUpdate]):
     pass
 
+@vendor_router.delete("/delete/{vendor_id}", response_model=Message,
+                      description="Delete a specific vendor",
+                      response_description="Success Message",
+                      status_code=200)
+async def delete_vendor(vendor_id: int):
+    pass
+
 
