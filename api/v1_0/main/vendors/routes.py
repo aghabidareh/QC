@@ -49,4 +49,16 @@ async def get_all(
 async def get_single_by_city_id(
         db: AsyncSession = Depends(get_db)
 ):
-    pass
+    query = (
+        select(VendorInformation.vendor_id)
+        .distinct(VendorInformation.vendor_id)
+        .filter(VendorInformation.city_id == VendorInformation.city_id)
+    )
+    result = await db.execute(query)
+    row = result.scalar()
+
+    vendor_identifier = VendorIdSingle(
+        vendor_id=row
+    )
+
+    return vendor_identifier
