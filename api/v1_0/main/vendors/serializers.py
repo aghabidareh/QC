@@ -20,3 +20,7 @@ class ActiveVendor(BaseModel):
     profile_name: str
     working_time: dict
     extra : dict
+
+class ActiveVendors(BaseModel):
+    vendors: List[ActiveVendor]
+    count: int
