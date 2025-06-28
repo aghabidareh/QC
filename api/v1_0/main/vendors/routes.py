@@ -105,7 +105,7 @@ async def get_active_by_id(
 
     return ActiveVendors(vendors=vendors, count=len(vendors))
 
-@vendor_main_router.get('profiles', response_model=Profiles,
+@vendor_main_router.get('/profiles', response_model=Profiles,
                         description='Get the profiles',
                         status_code=200)
 async def get_profiles(
