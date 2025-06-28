@@ -24,3 +24,9 @@ class ActiveVendor(BaseModel):
 class ActiveVendors(BaseModel):
     vendors: List[ActiveVendor]
     count: int
+
+class Profile(BaseModel):
+    pass
+
+class Profiles(BaseModel):
+    pass
