@@ -26,7 +26,9 @@ class ActiveVendors(BaseModel):
     count: int
 
 class Profile(BaseModel):
-    pass
+    id: int
+    title: Optional[str]
+    extra: Optional[dict]
 
 class Profiles(BaseModel):
     pass
