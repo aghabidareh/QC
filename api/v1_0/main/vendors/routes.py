@@ -44,7 +44,7 @@ async def get_all(
     return VendorIdSerializer(vendors=vendor_identifier, count=total_count)
 
 
-@vendor_main_router.get('/{city_id}', response_model=VendorIdSerializer,
+@vendor_main_router.get('/city/{city_id}', response_model=VendorIdSerializer,
                         description='Get the identifier of vendor by city identifier',
                         status_code=200)
 async def get_single_by_city_id(
@@ -106,22 +106,4 @@ async def get_active_by_id(
 
     return ActiveVendors(vendors=vendors, count=len(vendors))
 
-@vendor_main_router.get('/profiles', response_model=Profiles,
-                        description='Get the profiles',
-                        status_code=200)
-async def get_profiles(
-        db: AsyncSession = Depends(get_db),
-):
-    query = select(Enumerations).filter(Enumerations.parent_id==5).filter(Enumerations.status==True)
-    result = await db.execute(query)
-    rows = result.scalars().all()
 
-    profiles = [
-        Profile(
-            id=row.id,
-            title=row.title,
-            extra=row.extra,
-        )
-        for row in rows
-    ]
-    return Profiles(profiles=profiles, count=len(profiles))
