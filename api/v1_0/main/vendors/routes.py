@@ -8,6 +8,7 @@ from sqlalchemy.future import select
 from sqlalchemy.sql import func
 
 from api.database.database import get_db
+from api.v1_0.UI.vendors.models import VendorInformation
 
 from api.v1_0.main.vendors.serializers import VendorIdSerializer
 
@@ -18,7 +19,9 @@ logger = logging.getLogger(__name__)
 @vendor_main_router.get('/', response_model=VendorIdSerializer,
                         description='Get the identifier of Vendors',
                         status_code=200)
-def get_all(
+async def get_all(
         db: AsyncSession = Depends(get_db)
 ):
-    pass
+    count_query = select(func.count(func.distinct(VendorInformation.id))).select_from(VendorInformation)
+    count_result = await db.execute(count_query)
+    total_count = count_result.scalar()
