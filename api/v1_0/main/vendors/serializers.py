@@ -13,3 +13,6 @@ class VendorIdSingle(BaseModel):
 class VendorIdSerializer(BaseModel):
     vendors: List[VendorIdSingle]
     count: int
+
+class ActiveVendors(BaseModel):
+    pass
