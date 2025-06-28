@@ -44,7 +44,7 @@ async def get_all(
     return VendorIdSerializer(vendors=vendor_identifier, count=total_count)
 
 
-@vendor_main_router.get('/{city_id}', response_model=VendorIdSerializer,
+@vendor_main_router.get('/city/{city_id}', response_model=VendorIdSerializer,
                         description='Get the identifier of vendor by city identifier',
                         status_code=200)
 async def get_single_by_city_id(
