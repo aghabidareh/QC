@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 import logging
-from typing import List, Optional
+from typing import List
 
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,8 +8,8 @@ from sqlalchemy.future import select
 from sqlalchemy.sql import func
 
 from api.database.database import get_db
-from api.v1_0.models.vendors import VendorInformation
-from api.v1_0.schemas.vnedors import Vendors, Vendor, Message, VendorCreate, VendorUpdate
+from api.v1_0.vendors.models import VendorInformation
+from api.v1_0.vendors.serializers import Vendors, Vendor, Message, VendorCreate, VendorUpdate
 
 vendor_router = APIRouter(prefix="/vendors", tags=["Vendors"])
 logger = logging.getLogger(__name__)
