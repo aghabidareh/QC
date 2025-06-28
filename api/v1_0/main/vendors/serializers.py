@@ -3,7 +3,8 @@ from typing import Optional, List
 import re
 
 class VendorIdBase(BaseModel):
-    pass 
+    vendor_id: int
 
 class VendorIdSerializer(BaseModel):
-    pass
+    vendors = List[VendorIdBase]
+    count: int
