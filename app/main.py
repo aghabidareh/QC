@@ -14,7 +14,11 @@ app = FastAPI(title="QC",
               description="API for QC(q-commerce) project for basalam",
               version="1.0", )
 
+### UI Rotes
 app.include_router(vendor_ui_router)
+
+
+### Main Routes
 app.include_router(vendor_main_router)
 
 CORS_ORIGINS = os.getenv("CORS_ORIGINS").split(",")
