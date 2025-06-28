@@ -75,10 +75,9 @@ async def get_active_by_id(
         db: AsyncSession = Depends(get_db),
         source: Optional[str] = Query(None, enum=["vendor", "profile"])
 ):
-    print("touched")
     query = select(Vendors, Enumerations).join(
         Enumerations, Vendors.profile_id == Enumerations.id, isouter=True
-    )
+    ).filter(Vendors.status == 2)
     if source == "vendor":
         query = query.filter(Vendors.vendor_id == id)
     elif source == "profile":
