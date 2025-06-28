@@ -11,7 +11,7 @@ from api.database.database import get_db
 from api.v1_0.vendors.models import VendorInformation
 from api.v1_0.vendors.serializers import Vendors, Vendor, Message, VendorCreate, VendorUpdate
 
-vendor_router = APIRouter(prefix="/vendors", tags=["Vendors"])
+vendor_router = APIRouter(prefix="/vendors", tags=["Vendors UI"])
 logger = logging.getLogger(__name__)
 
 
