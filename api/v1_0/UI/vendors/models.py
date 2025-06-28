@@ -10,7 +10,7 @@ class Enumerations(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     parent_id = Column(Integer, ForeignKey('enumerations.id', ondelete="CASCADE"))
-    text = Column(String)
+    title = Column(String)
     extra = Column(JSON)
     status = Column(Boolean)
     created_at = Column(DateTime, default=datetime.now)
