@@ -16,10 +16,10 @@ class VendorIdSerializer(BaseModel):
 
 class ActiveVendor(BaseModel):
     vendor_id: int
-    profile_id: int
-    profile_name: str
-    working_time: dict
-    extra : dict
+    profile_id: Optional[int]
+    profile_name: Optional[str]
+    working_time: Optional[dict]
+    extra : Optional[dict]
 
 class ActiveVendors(BaseModel):
     vendors: List[ActiveVendor]
