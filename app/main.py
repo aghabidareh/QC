@@ -7,7 +7,7 @@ import os
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.database.database import database
-from api.v1_0.vendors.routes import vendor_router
+from api.v1_0.UI.vendors.routes import vendor_router
 
 app = FastAPI(title="QC",
               description="API for QC(q-commerce) project for basalam",
