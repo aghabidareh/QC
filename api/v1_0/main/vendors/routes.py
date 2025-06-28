@@ -10,7 +10,7 @@ from sqlalchemy.sql import func
 from api.database.database import get_db
 from api.v1_0.UI.vendors.models import VendorInformation
 
-from api.v1_0.main.vendors.serializers import VendorIdSerializer, VendorIdBase
+from api.v1_0.main.vendors.serializers import VendorIdSerializer, VendorIdSingle
 
 vendor_main_router = APIRouter(prefix="/main/vendors", tags=["Vendors Main"])
 logger = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ async def get_all(
     rows = result.scalars().all()
 
     vendor_identifier = [
-        VendorIdBase(
+        VendorIdSingle(
             vendor_id=row
         )
         for row in rows
