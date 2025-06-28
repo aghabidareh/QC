@@ -55,7 +55,7 @@ async def get_single_by_city_id(
         .filter(VendorInformation.city_id == VendorInformation.city_id)
     )
     result = await db.execute(query)
-    row = result.scalar()
+    rows = result.scalars().all()
 
     vendor_identifier = [
         VendorIdSingle(
@@ -64,4 +64,4 @@ async def get_single_by_city_id(
         for row in rows
     ]
 
-    return VendorIdSerializer(vendors=vendor_identifier, count=total_count)
+    return VendorIdSerializer(vendors=vendor_identifier, count=len(vendor_identifier))
