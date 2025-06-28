@@ -10,7 +10,7 @@ from sqlalchemy.sql import func
 from api.database.database import get_db
 from api.v1_0.UI.vendors.models import VendorInformation, Vendors, Enumerations
 
-from api.v1_0.main.vendors.serializers import VendorIdSerializer, VendorIdSingle, ActiveVendors, ActiveVendor
+from api.v1_0.main.vendors.serializers import VendorIdSerializer, VendorIdSingle, ActiveVendors, ActiveVendor, Profiles
 
 vendor_main_router = APIRouter(prefix="/main/vendors", tags=["Vendors Main"])
 logger = logging.getLogger(__name__)
@@ -103,3 +103,9 @@ async def get_active_by_id(
     ]
 
     return ActiveVendors(vendors=vendors, count=len(vendors))
+
+@vendor_main_router.get('profiles', response_model=Profiles,
+                        description='Get the profiles',
+                        status_code=200)
+async def get_profiles():
+    pass
