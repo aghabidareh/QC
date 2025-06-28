@@ -11,11 +11,11 @@ from api.database.database import get_db
 from api.v1_0.UI.vendors.models import VendorInformation
 from api.v1_0.UI.vendors.serializers import Vendors, Vendor, Message, VendorCreate, VendorUpdate
 
-vendor_router = APIRouter(prefix="/vendors", tags=["Vendors UI"])
+vendor_ui_router = APIRouter(prefix="/vendors", tags=["Vendors UI"])
 logger = logging.getLogger(__name__)
 
 
-@vendor_router.get("/", response_model=Vendors,
+@vendor_ui_router.get("/", response_model=Vendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
@@ -55,7 +55,7 @@ async def get_vendors(
     return Vendors(count=total_count, vendors=vendors)
 
 
-@vendor_router.get("/{vendor_id}", response_model=Vendor,
+@vendor_ui_router.get("/{vendor_id}", response_model=Vendor,
                    description="Get a specific vendor",
                    response_description="Vendor details",
                    status_code=200)
@@ -82,7 +82,7 @@ async def get_vendor(
     )
 
 
-@vendor_router.get("/search", response_model=Vendors,
+@vendor_ui_router.get("/search", response_model=Vendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam which is searched",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
@@ -115,7 +115,7 @@ async def get_vendors_search(
     return Vendors(count=len(vendors), vendors=vendors)
 
 
-@vendor_router.post("/add", response_model=Message,
+@vendor_ui_router.post("/add", response_model=Message,
                     description="Create a new vendor whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
@@ -123,7 +123,7 @@ async def create_vendor(vendor_info: VendorCreate):
     pass
 
 
-@vendor_router.post("/add-multiple", response_model=Message,
+@vendor_ui_router.post("/add-multiple", response_model=Message,
                     description="Add new vendors whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
@@ -131,7 +131,7 @@ async def create_vendors_multiple(vendor_infos: List[VendorCreate]):
     Message(message="Unfortunately successfully")
 
 
-@vendor_router.put("/update/{vendor_id}", response_model=Message,
+@vendor_ui_router.put("/update/{vendor_id}", response_model=Message,
                    description="Update a specific vendor",
                    response_description="Success Message",
                    status_code=200)
@@ -139,7 +139,7 @@ async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
     Message(message="Unfortunately successfully")
 
 
-@vendor_router.put("/update-multiple", response_model=Message,
+@vendor_ui_router.put("/update-multiple", response_model=Message,
                    description="Update a specific vendors",
                    response_description="Success Message",
                    status_code=200)
@@ -147,7 +147,7 @@ async def update_vendors_multiple(vendor_infos: List[VendorUpdate]):
     Message(message="Unfortunately successfully")
 
 
-@vendor_router.delete("/delete/{vendor_id}", response_model=Message,
+@vendor_ui_router.delete("/delete/{vendor_id}", response_model=Message,
                       description="Delete a specific vendor",
                       response_description="Success Message",
                       status_code=200)
@@ -155,7 +155,7 @@ async def delete_vendor(vendor_id: int):
     Message(message="Unfortunately successfully")
 
 
-@vendor_router.delete("/delete-multiple", response_model=Message,
+@vendor_ui_router.delete("/delete-multiple", response_model=Message,
                       description="Delete a specific vendors",
                       response_description="Success Message",
                       status_code=200)
@@ -163,7 +163,7 @@ async def delete_vendors_multiple(vendor_ids: List[int]):
     Message(message="Unfortunately successfully")
 
 
-@vendor_router.delete("/delete-all", response_model=Message,
+@vendor_ui_router.delete("/delete-all", response_model=Message,
                       description="Delete all vendors",
                       response_description="Success Message",
                       status_code=200)
