@@ -14,7 +14,7 @@ class VendorIdSerializer(BaseModel):
     vendors: List[VendorIdSingle]
     count: int
 
-class ActiveVendors(BaseModel):
+class ActiveVendor(BaseModel):
     vendor_id: int
     profile_id: int
     profile_name: str
