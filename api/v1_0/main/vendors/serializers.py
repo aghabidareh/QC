@@ -15,4 +15,8 @@ class VendorIdSerializer(BaseModel):
     count: int
 
 class ActiveVendors(BaseModel):
-    pass
+    vendor_id: int
+    profile_id: int
+    profile_name: str
+    working_time: dict
+    extra : dict
