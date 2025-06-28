@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 import logging
-from typing import List
+from typing import List, Optional
 
 from fastapi.params import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,7 +8,7 @@ from sqlalchemy.future import select
 from sqlalchemy.sql import func
 
 from api.database.database import get_db
-from api.v1_0.UI.vendors.models import VendorInformation
+from api.v1_0.UI.vendors.models import VendorInformation, Vendors, Enumerations
 
 from api.v1_0.main.vendors.serializers import VendorIdSerializer, VendorIdSingle, ActiveVendors, ActiveVendor
 
@@ -43,7 +43,7 @@ async def get_all(
     return VendorIdSerializer(vendors=vendor_identifier, count=total_count)
 
 
-@vendor_main_router.get('/{city_id}', response_model=VendorIdSingle,
+@vendor_main_router.get('/{city_id}', response_model=VendorIdSerializer,
                         description='Get the identifier of vendor by city identifier',
                         status_code=200)
 async def get_single_by_city_id(
@@ -65,3 +65,42 @@ async def get_single_by_city_id(
     ]
 
     return VendorIdSerializer(vendors=vendor_identifier, count=len(vendor_identifier))
+
+
+@vendor_main_router.get('/active/{id}', response_model=ActiveVendors,
+                        description='Get the active vendor by id',
+                        status_code=200)
+async def get_active_by_id(
+        id: int,
+        db: AsyncSession = Depends(get_db),
+        source: Optional[str] = Query(None, enum=["vendor", "profile"])
+):
+    print("touched")
+    query = select(Vendors, Enumerations).join(
+        Enumerations, Vendors.profile_id == Enumerations.id, isouter=True
+    )
+    if source == "vendor":
+        query = query.filter(Vendors.vendor_id == id)
+    elif source == "profile":
+        query = query.filter(Vendors.profile_id == id)
+    else:
+        raise HTTPException(status_code=400, detail="Source must be 'vendor' or 'profile'")
+
+    result = await db.execute(query)
+    rows = result.all()
+
+    if not rows:
+        raise HTTPException(status_code=404, detail="Vendor not found")
+
+    vendors = [
+        ActiveVendor(
+            vendor_id=row[0].vendor_id,
+            profile_id=row[0].profile_id,
+            profile_name=row[1].title,
+            working_time=row[0].working_times if hasattr(row[0], 'working_times') else None,
+            extra=row[0].extra
+        )
+        for row in rows
+    ]
+
+    return ActiveVendors(vendors=vendors, count=len(vendors))
