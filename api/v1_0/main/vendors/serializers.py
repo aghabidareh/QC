@@ -31,4 +31,5 @@ class Profile(BaseModel):
     extra: Optional[dict]
 
 class Profiles(BaseModel):
-    pass
+    profiles: List[Profile]
+    count: int
