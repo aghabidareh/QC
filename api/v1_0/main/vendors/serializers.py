@@ -18,7 +18,7 @@ class ActiveVendor(BaseModel):
     vendor_id: int
     profile_id: Optional[int]
     profile_name: Optional[str]
-    working_time: Optional[dict]
+    working_time: Optional[List[dict]]
     extra : Optional[dict]
 
 class ActiveVendors(BaseModel):
