@@ -128,7 +128,7 @@ async def create_vendor(vendor_info: VendorCreate):
                     response_description="Success Message",
                     status_code=201)
 async def create_vendors_multiple(vendor_infos: List[VendorCreate]):
-    pass
+    Message(message="Unfortunately successfully")
 
 
 @vendor_router.put("/update/{vendor_id}", response_model=Message,
@@ -136,7 +136,7 @@ async def create_vendors_multiple(vendor_infos: List[VendorCreate]):
                    response_description="Success Message",
                    status_code=200)
 async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
-    pass
+    Message(message="Unfortunately successfully")
 
 
 @vendor_router.put("/update-multiple", response_model=Message,
@@ -144,7 +144,7 @@ async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
                    response_description="Success Message",
                    status_code=200)
 async def update_vendors_multiple(vendor_infos: List[VendorUpdate]):
-    pass
+    Message(message="Unfortunately successfully")
 
 
 @vendor_router.delete("/delete/{vendor_id}", response_model=Message,
@@ -152,7 +152,7 @@ async def update_vendors_multiple(vendor_infos: List[VendorUpdate]):
                       response_description="Success Message",
                       status_code=200)
 async def delete_vendor(vendor_id: int):
-    pass
+    Message(message="Unfortunately successfully")
 
 
 @vendor_router.delete("/delete-multiple", response_model=Message,
@@ -160,7 +160,7 @@ async def delete_vendor(vendor_id: int):
                       response_description="Success Message",
                       status_code=200)
 async def delete_vendors_multiple(vendor_ids: List[int]):
-    pass
+    Message(message="Unfortunately successfully")
 
 
 @vendor_router.delete("/delete-all", response_model=Message,
@@ -168,4 +168,4 @@ async def delete_vendors_multiple(vendor_ids: List[int]):
                       response_description="Success Message",
                       status_code=200)
 async def delete_all_vendors():
-    pass
+    Message(message="Unfortunately successfully")
