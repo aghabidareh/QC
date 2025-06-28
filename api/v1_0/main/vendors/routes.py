@@ -48,12 +48,13 @@ async def get_all(
                         description='Get the identifier of vendor by city identifier',
                         status_code=200)
 async def get_single_by_city_id(
+        city_id: int,
         db: AsyncSession = Depends(get_db)
 ):
     query = (
         select(VendorInformation.vendor_id)
         .distinct(VendorInformation.vendor_id)
-        .filter(VendorInformation.city_id == VendorInformation.city_id)
+        .filter(VendorInformation.city_id == city_id)
     )
     result = await db.execute(query)
     rows = result.scalars().all()
