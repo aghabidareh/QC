@@ -69,6 +69,32 @@ async def get_single_by_city_id(
     return VendorIdSerializer(vendors=vendor_identifier, count=len(vendor_identifier))
 
 
+@vendor_main_router.get('/actives', response_model=ActiveVendors,
+                        description='Get all active vendors',
+                        status_code=200)
+async def all_actives(
+        db: AsyncSession = Depends(get_db)
+):
+    query = select(Vendors, Enumerations).join(
+        Enumerations,  Vendors.vendor_id == Vendors.vendor_id, isouter=True
+    ).filter(Vendors.status == 2)
+    result = await db.execute(query)
+    rows = result.all()
+
+    vendors = [
+        ActiveVendor(
+            vendor_id=row[0].vendor_id,
+            profile_id=row[0].profile_id,
+            profile_name=row[1].title,
+            working_time=row[0].working_times if hasattr(row[0], 'working_times') else None,
+            extra=row[0].extra
+        )
+        for row in rows
+    ]
+
+    return ActiveVendors(vendors=vendors, count=len(vendors))
+
+
 @vendor_main_router.get('/active/{id}', response_model=ActiveVendors,
                         description='Get the active vendor by id',
                         status_code=200)
