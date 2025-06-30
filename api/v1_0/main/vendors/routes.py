@@ -76,7 +76,7 @@ async def all_actives(
         db: AsyncSession = Depends(get_db)
 ):
     query = select(Vendors, Enumerations).join(
-        Enumerations,  Vendors.vendor_id == Vendors.vendor_id, isouter=True
+        Enumerations,  Vendors.profile_id == Enumerations.id, isouter=True
     ).filter(Vendors.status == 2)
     result = await db.execute(query)
     rows = result.all()
