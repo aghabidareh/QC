@@ -10,8 +10,7 @@ from sqlalchemy.sql import func
 from api.database.database import get_db
 from api.v1_0.UI.vendors.models import VendorInformation, Vendors, Enumerations
 
-from api.v1_0.main.vendors.serializers import VendorIdSerializer, VendorIdSingle, ActiveVendors, ActiveVendor, Profiles, \
-    Profile
+from api.v1_0.main.vendors.serializers import VendorIdSerializer, ActiveVendors, ActiveVendor
 
 vendor_main_router = APIRouter(prefix="/main/vendors", tags=["Vendors Main"])
 logger = logging.getLogger(__name__)
@@ -35,10 +34,7 @@ async def get_all(
     rows = result.scalars().all()
 
     vendor_identifier = [
-        VendorIdSingle(
-            vendor_id=row
-        )
-        for row in rows
+        row for row in rows
     ]
 
     return VendorIdSerializer(vendors=vendor_identifier, count=total_count)
@@ -60,10 +56,7 @@ async def get_single_by_city_id(
     rows = result.scalars().all()
 
     vendor_identifier = [
-        VendorIdSingle(
-            vendor_id=row
-        )
-        for row in rows
+        row for row in rows
     ]
 
     return VendorIdSerializer(vendors=vendor_identifier, count=len(vendor_identifier))
