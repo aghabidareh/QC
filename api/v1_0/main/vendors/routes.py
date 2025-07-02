@@ -12,7 +12,7 @@ from api.v1_0.UI.vendors.models import VendorInformation, Vendors, Enumerations
 
 from api.v1_0.main.vendors.serializers import VendorIdSerializer, ActiveVendors, ActiveVendor
 
-vendor_main_router = APIRouter(prefix="/main/vendors", tags=["Vendors Main"])
+vendor_main_router = APIRouter(prefix="/v1/main/vendors", tags=["Vendors Main"])
 logger = logging.getLogger(__name__)
 
 

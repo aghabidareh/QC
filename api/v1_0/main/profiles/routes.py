@@ -9,7 +9,7 @@ from api.database.database import get_db
 from api.v1_0.UI.vendors.models import Enumerations
 from api.v1_0.main.profiles.serializers import Profile, Profiles
 
-profile_main_router = APIRouter(prefix="/main/profiles", tags=["Profiles Main"])
+profile_main_router = APIRouter(prefix="/v1/main/profiles", tags=["Profiles Main"])
 logger = logging.getLogger(__name__)
 
 @profile_main_router.get('/profiles', response_model=Profiles,
