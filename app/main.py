@@ -45,12 +45,12 @@ async def shutdown():
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "QC"}
 
 
 @app.get("/hello/{name}")
 async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+    return {"message": f"Hello {name} from QC"}
 
 
 BASE_DIR = Path(__file__).resolve().parent
