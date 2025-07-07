@@ -9,6 +9,7 @@ from sqlalchemy.sql import func
 
 from api.database.database import get_db
 from api.v1_0.vendors.models import VendorInformation, Enumerations
+from api.v1_0.vendors.models import Vendors as VendorsModel
 from api.v1_0.vendors.serializers import *
 
 vendor_router = APIRouter(prefix="/v1/vendors", tags=["Vendors"])
@@ -153,9 +154,9 @@ async def get_single_by_city_id(
 async def all_actives(
         db: AsyncSession = Depends(get_db)
 ):
-    query = select(Vendors, Enumerations).join(
-        Enumerations, Vendors.profile_id == Enumerations.id, isouter=True
-    ).filter(Vendors.status == 2)
+    query = select(VendorsModel, Enumerations).join(
+        Enumerations, Enumerations.id == VendorsModel.profile_id, isouter=True
+    ).filter(VendorsModel.status == 2)
     result = await db.execute(query)
     rows = result.all()
 
@@ -181,13 +182,13 @@ async def get_active_by_id(
         db: AsyncSession = Depends(get_db),
         source: Optional[str] = Query(None, enum=["vendor", "profile"])
 ):
-    query = select(Vendors, Enumerations).join(
-        Enumerations, Vendors.profile_id == Enumerations.id, isouter=True
-    ).filter(Vendors.status == 2)
+    query = select(VendorsModel, Enumerations).join(
+        Enumerations, VendorsModel.profile_id == Enumerations.id, isouter=True
+    ).filter(VendorsModel.status == 2)
     if source == "vendor":
-        query = query.filter(Vendors.vendor_id == id)
+        query = query.filter(VendorsModel.vendor_id == id)
     elif source == "profile":
-        query = query.filter(Vendors.profile_id == id)
+        query = query.filter(VendorsModel.profile_id == id)
     else:
         raise HTTPException(status_code=400, detail="Source must be 'vendor' or 'profile'")
 
