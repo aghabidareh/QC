@@ -7,20 +7,14 @@ import os
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.database.database import database
-from api.v1_0.UI.vendors.routes import vendor_ui_router
-from api.v1_0.profiles.routes import profile_main_router
-from api.v1_0.main.vendors.routes import vendor_main_router
+from api.v1_0.vendors.routes import vendor_router
 
 app = FastAPI(title="QC",
               description="API for QC(q-commerce) project for basalam",
               version="1.0", )
 
-### UI Rotes
-app.include_router(vendor_ui_router)
-
-### Main Routes
-app.include_router(vendor_main_router)
-app.include_router(profile_main_router)
+"Routes will be defined here"
+app.include_router(vendor_router)
 
 CORS_ORIGINS = os.getenv("CORS_ORIGINS").split(",")
 app.add_middleware(

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, HTTPException
 import logging
 from typing import List
 
@@ -8,14 +8,14 @@ from sqlalchemy.future import select
 from sqlalchemy.sql import func
 
 from api.database.database import get_db
-from api.v1_0.vendors.models import VendorInformation
-from api.v1_0.vendors.serializers import Vendors, Vendor, Message, VendorCreate, VendorUpdate
+from api.v1_0.vendors.models import VendorInformation, Enumerations
+from api.v1_0.vendors.serializers import *
 
-vendor_ui_router = APIRouter(prefix="/v1/ui/vendors", tags=["Vendors UI"])
+vendor_router = APIRouter(prefix="/v1/vendors", tags=["Vendors"])
 logger = logging.getLogger(__name__)
 
 
-@vendor_ui_router.get("/", response_model=Vendors,
+@vendor_router.get("/", response_model=Vendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
@@ -55,7 +55,7 @@ async def get_vendors(
     return Vendors(count=total_count, vendors=vendors)
 
 
-@vendor_ui_router.get("/{vendor_id}", response_model=Vendor,
+@vendor_router.get("/{vendor_id}", response_model=Vendor,
                    description="Get a specific vendor",
                    response_description="Vendor details",
                    status_code=200)
@@ -82,7 +82,7 @@ async def get_vendor(
     )
 
 
-@vendor_ui_router.get("/search", response_model=Vendors,
+@vendor_router.get("/search", response_model=Vendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam which is searched",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
@@ -115,7 +115,93 @@ async def get_vendors_search(
     return Vendors(count=len(vendors), vendors=vendors)
 
 
-@vendor_ui_router.post("/add", response_model=Message,
+@vendor_router.get("/city/{city_id}", response_model=dict,
+                   description='Get the identifier of vendor by city identifier',
+                   status_code=200)
+async def get_single_by_city_id(
+        city_id: int,
+        db: AsyncSession = Depends(get_db)
+):
+    query = (
+        select(VendorInformation.vendor_id)
+        .distinct(VendorInformation.vendor_id)
+        .filter(VendorInformation.city_id == city_id)
+    )
+    result = await db.execute(query)
+    rows = result.scalars().all()
+
+    vendor_identifier = [
+        row for row in rows
+    ]
+
+    return {'vendors': vendor_identifier, 'count': len(vendor_identifier)}
+
+
+@vendor_router.get('/actives', response_model=ActiveVendors,
+                   description='Get all active vendors',
+                   status_code=200)
+async def all_actives(
+        db: AsyncSession = Depends(get_db)
+):
+    query = select(Vendors, Enumerations).join(
+        Enumerations, Vendors.profile_id == Enumerations.id, isouter=True
+    ).filter(Vendors.status == 2)
+    result = await db.execute(query)
+    rows = result.all()
+
+    vendors = [
+        ActiveVendor(
+            vendor_id=row[0].vendor_id,
+            profile_id=row[0].profile_id,
+            profile_name=row[1].title,
+            working_time=row[0].working_times if hasattr(row[0], 'working_times') else None,
+            extra=row[0].extra
+        )
+        for row in rows
+    ]
+
+    return ActiveVendors(vendors=vendors, count=len(vendors))
+
+
+@vendor_router.get('/active/{id}', response_model=ActiveVendors,
+                   description='Get the active vendor by id',
+                   status_code=200)
+async def get_active_by_id(
+        id: int,
+        db: AsyncSession = Depends(get_db),
+        source: Optional[str] = Query(None, enum=["vendor", "profile"])
+):
+    query = select(Vendors, Enumerations).join(
+        Enumerations, Vendors.profile_id == Enumerations.id, isouter=True
+    ).filter(Vendors.status == 2)
+    if source == "vendor":
+        query = query.filter(Vendors.vendor_id == id)
+    elif source == "profile":
+        query = query.filter(Vendors.profile_id == id)
+    else:
+        raise HTTPException(status_code=400, detail="Source must be 'vendor' or 'profile'")
+
+    result = await db.execute(query)
+    rows = result.all()
+
+    if not rows:
+        raise HTTPException(status_code=404, detail="Vendor not found")
+
+    vendors = [
+        ActiveVendor(
+            vendor_id=row[0].vendor_id,
+            profile_id=row[0].profile_id,
+            profile_name=row[1].title,
+            working_time=row[0].working_times if hasattr(row[0], 'working_times') else None,
+            extra=row[0].extra
+        )
+        for row in rows
+    ]
+
+    return ActiveVendors(vendors=vendors, count=len(vendors))
+
+
+@vendor_router.post("/add", response_model=Message,
                     description="Create a new vendor whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
@@ -123,7 +209,7 @@ async def create_vendor(vendor_info: VendorCreate):
     pass
 
 
-@vendor_ui_router.post("/add-multiple", response_model=Message,
+@vendor_router.post("/add-multiple", response_model=Message,
                     description="Add new vendors whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
@@ -131,7 +217,7 @@ async def create_vendors_multiple(vendor_infos: List[VendorCreate]):
     Message(message="Unfortunately successfully")
 
 
-@vendor_ui_router.put("/update/{vendor_id}", response_model=Message,
+@vendor_router.put("/update/{vendor_id}", response_model=Message,
                    description="Update a specific vendor",
                    response_description="Success Message",
                    status_code=200)
@@ -139,7 +225,7 @@ async def update_vendor(vendor_id: int, vendor_info: VendorUpdate):
     Message(message="Unfortunately successfully")
 
 
-@vendor_ui_router.put("/update-multiple", response_model=Message,
+@vendor_router.put("/update-multiple", response_model=Message,
                    description="Update a specific vendors",
                    response_description="Success Message",
                    status_code=200)
@@ -147,7 +233,7 @@ async def update_vendors_multiple(vendor_infos: List[VendorUpdate]):
     Message(message="Unfortunately successfully")
 
 
-@vendor_ui_router.delete("/delete/{vendor_id}", response_model=Message,
+@vendor_router.delete("/delete/{vendor_id}", response_model=Message,
                       description="Delete a specific vendor",
                       response_description="Success Message",
                       status_code=200)
@@ -155,7 +241,7 @@ async def delete_vendor(vendor_id: int):
     Message(message="Unfortunately successfully")
 
 
-@vendor_ui_router.delete("/delete-multiple", response_model=Message,
+@vendor_router.delete("/delete-multiple", response_model=Message,
                       description="Delete a specific vendors",
                       response_description="Success Message",
                       status_code=200)
@@ -163,7 +249,7 @@ async def delete_vendors_multiple(vendor_ids: List[int]):
     Message(message="Unfortunately successfully")
 
 
-@vendor_ui_router.delete("/delete-all", response_model=Message,
+@vendor_router.delete("/delete-all", response_model=Message,
                       description="Delete all vendors",
                       response_description="Success Message",
                       status_code=200)
