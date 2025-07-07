@@ -3,7 +3,7 @@ from typing import Optional, List
 import re
 
 
-class Vendor(BaseModel):
+class SingleVendor(BaseModel):
     vendor_identifier: Optional[int]
     vendor_name_persian: Optional[str]
     vendor_name_english: Optional[str]
@@ -30,8 +30,8 @@ class ActiveVendors(BaseModel):
     count: int
 
 
-class Vendors(BaseModel):
-    vendors: List[Vendor]
+class AllVendors(BaseModel):
+    vendors: List[SingleVendor]
     count: int
 
 

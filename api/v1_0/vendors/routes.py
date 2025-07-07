@@ -9,14 +9,14 @@ from sqlalchemy.sql import func
 
 from api.database.database import get_db
 from api.v1_0.vendors.models import VendorInformation, Enumerations
-from api.v1_0.vendors.models import Vendors as VendorsModel
+from api.v1_0.vendors.models import Vendors
 from api.v1_0.vendors.serializers import *
 
 vendor_router = APIRouter(prefix="/v1/vendors", tags=["Vendors"])
 logger = logging.getLogger(__name__)
 
 
-@vendor_router.get("/", response_model=Vendors,
+@vendor_router.get("/", response_model=AllVendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
@@ -40,7 +40,7 @@ async def get_vendors(
     rows = result.scalars().all()
 
     vendors = [
-        Vendor(
+        SingleVendor(
             vendor_identifier=vendor.vendor_id,
             vendor_name_english=vendor.vendor_english_name,
             vendor_name_persian=vendor.vendor_persian_name,
@@ -53,10 +53,10 @@ async def get_vendors(
         for vendor in rows
     ]
 
-    return Vendors(count=total_count, vendors=vendors)
+    return AllVendors(count=total_count, vendors=vendors)
 
 
-@vendor_router.get("/{vendor_id}", response_model=Vendor,
+@vendor_router.get("/{vendor_id}", response_model=SingleVendor,
                    description="Get a specific vendor",
                    response_description="Vendor details",
                    status_code=200)
@@ -71,7 +71,7 @@ async def get_vendor(
     result = await db.execute(query)
     row = result.scalar()
 
-    return Vendor(
+    return SingleVendor(
         vendor_identifier=row.vendor_id,
         vendor_name_english=row.vendor_english_name,
         vendor_name_persian=row.vendor_persian_name,
@@ -83,7 +83,7 @@ async def get_vendor(
     )
 
 
-@vendor_router.get("/search", response_model=Vendors,
+@vendor_router.get("/search", response_model=AllVendors,
                    description="Get all vendors connected to the Quick Commerce in Basalam which is searched",
                    response_description="All vendors connected to the Quick Commerce in Basalam",
                    status_code=200)
@@ -100,7 +100,7 @@ async def get_vendors_search(
     rows = results.scalars().all()
 
     vendors = [
-        Vendor(
+        SingleVendor(
             vendor_identifier=vendor.vendor_id,
             vendor_name_english=vendor.vendor_english_name,
             vendor_name_persian=vendor.vendor_persian_name,
@@ -113,10 +113,10 @@ async def get_vendors_search(
         for vendor in rows
     ]
 
-    return Vendors(count=len(vendors), vendors=vendors)
+    return AllVendors(count=len(vendors), vendors=vendors)
 
 
-@vendor_router.get("/city/{city_id}", response_model=Vendors,
+@vendor_router.get("/city/{city_id}", response_model=AllVendors,
                    description='Get vendors by the city identifier',
                    status_code=200)
 async def get_single_by_city_id(
@@ -132,7 +132,7 @@ async def get_single_by_city_id(
     rows = result.scalars().all()
 
     vendors = [
-        Vendor(
+        SingleVendor(
             vendor_identifier=vendor.vendor_id,
             vendor_name_english=vendor.vendor_english_name,
             vendor_name_persian=vendor.vendor_persian_name,
@@ -145,7 +145,7 @@ async def get_single_by_city_id(
         for vendor in rows
     ]
 
-    return {'vendors': vendors, 'count': len(vendors)}
+    return AllVendors(vendors=vendors, count=len(vendors))
 
 
 @vendor_router.get('/actives/list', response_model=ActiveVendors,
@@ -154,9 +154,9 @@ async def get_single_by_city_id(
 async def all_actives(
         db: AsyncSession = Depends(get_db)
 ):
-    query = select(VendorsModel, Enumerations).join(
-        Enumerations, Enumerations.id == VendorsModel.profile_id, isouter=True
-    ).filter(VendorsModel.status == 2)
+    query = select(Vendors, Enumerations).join(
+        Enumerations, Enumerations.id == Vendors.profile_id, isouter=True
+    ).filter(Vendors.status == 2)
     result = await db.execute(query)
     rows = result.all()
 
@@ -182,13 +182,13 @@ async def get_active_by_id(
         db: AsyncSession = Depends(get_db),
         source: Optional[str] = Query(None, enum=["vendor", "profile"])
 ):
-    query = select(VendorsModel, Enumerations).join(
-        Enumerations, VendorsModel.profile_id == Enumerations.id, isouter=True
-    ).filter(VendorsModel.status == 2)
+    query = select(Vendors, Enumerations).join(
+        Enumerations, Vendors.profile_id == Enumerations.id, isouter=True
+    ).filter(Vendors.status == 2)
     if source == "vendor":
-        query = query.filter(VendorsModel.vendor_id == id)
+        query = query.filter(Vendors.vendor_id == id)
     elif source == "profile":
-        query = query.filter(VendorsModel.profile_id == id)
+        query = query.filter(Vendors.profile_id == id)
     else:
         raise HTTPException(status_code=400, detail="Source must be 'vendor' or 'profile'")
 
