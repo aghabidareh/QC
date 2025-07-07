@@ -8,8 +8,8 @@ from sqlalchemy.future import select
 from sqlalchemy.sql import func
 
 from api.database.database import get_db
-from api.v1_0.UI.vendors.models import VendorInformation
-from api.v1_0.UI.vendors.serializers import Vendors, Vendor, Message, VendorCreate, VendorUpdate
+from api.v1_0.vendors.models import VendorInformation
+from api.v1_0.vendors.serializers import Vendors, Vendor, Message, VendorCreate, VendorUpdate
 
 vendor_ui_router = APIRouter(prefix="/v1/ui/vendors", tags=["Vendors UI"])
 logger = logging.getLogger(__name__)
