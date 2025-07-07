@@ -115,29 +115,39 @@ async def get_vendors_search(
     return Vendors(count=len(vendors), vendors=vendors)
 
 
-@vendor_router.get("/city/{city_id}", response_model=dict,
-                   description='Get the identifier of vendor by city identifier',
+@vendor_router.get("/city/{city_id}", response_model=Vendors,
+                   description='Get vendors by the city identifier',
                    status_code=200)
 async def get_single_by_city_id(
         city_id: int,
         db: AsyncSession = Depends(get_db)
 ):
     query = (
-        select(VendorInformation.vendor_id)
+        select(VendorInformation)
         .distinct(VendorInformation.vendor_id)
         .filter(VendorInformation.city_id == city_id)
     )
     result = await db.execute(query)
     rows = result.scalars().all()
 
-    vendor_identifier = [
-        row for row in rows
+    vendors = [
+        Vendor(
+            vendor_identifier=vendor.vendor_id,
+            vendor_name_english=vendor.vendor_english_name,
+            vendor_name_persian=vendor.vendor_persian_name,
+            phone_number_of_owner=vendor.vendor_phone_number,
+            the_number_of_products=vendor.products_count,
+            the_number_of_purchase=vendor.purchase_count,
+            the_number_of_sold_products=vendor.sold_products,
+            is_active=vendor.is_active,
+        )
+        for vendor in rows
     ]
 
-    return {'vendors': vendor_identifier, 'count': len(vendor_identifier)}
+    return {'vendors': vendors, 'count': len(vendors)}
 
 
-@vendor_router.get('/actives', response_model=ActiveVendors,
+@vendor_router.get('/actives/list', response_model=ActiveVendors,
                    description='Get all active vendors',
                    status_code=200)
 async def all_actives(
@@ -163,7 +173,7 @@ async def all_actives(
     return ActiveVendors(vendors=vendors, count=len(vendors))
 
 
-@vendor_router.get('/active/{id}', response_model=ActiveVendors,
+@vendor_router.get('/actives/single/{id}', response_model=ActiveVendors,
                    description='Get the active vendor by id',
                    status_code=200)
 async def get_active_by_id(
