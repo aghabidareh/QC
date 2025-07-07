@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from api.database.database import database
 from api.v1_0.UI.vendors.routes import vendor_ui_router
-from api.v1_0.main.profiles.routes import profile_main_router
+from api.v1_0.profiles.routes import profile_main_router
 from api.v1_0.main.vendors.routes import vendor_main_router
 
 app = FastAPI(title="QC",
