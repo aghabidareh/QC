@@ -18,7 +18,6 @@ app = FastAPI(title="QC",
 ### UI Rotes
 app.include_router(vendor_ui_router)
 
-
 ### Main Routes
 app.include_router(vendor_main_router)
 app.include_router(profile_main_router)
