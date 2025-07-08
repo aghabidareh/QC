@@ -7,9 +7,11 @@ from sqlalchemy.sql import func
 
 from api.database.database import get_db
 from api.v1_0.vendors.models import VendorInformation, Enumerations, Vendors
-from api.v1_0.vendors.serializers import AllVendors, SingleVendor, ActiveVendors, ActiveVendor, Message, VendorCreate, VendorUpdate
+from api.v1_0.vendors.serializers import AllVendors, SingleVendor, ActiveVendors, ActiveVendor, Message, VendorCreate, \
+    VendorUpdate
 
 logger = logging.getLogger(__name__)
+
 
 async def get_vendors_query(vendor_handler: 'BaseVendor', limit: int, offset: int):
     db = vendor_handler.db
@@ -43,6 +45,7 @@ async def get_vendors_query(vendor_handler: 'BaseVendor', limit: int, offset: in
 
     return AllVendors(count=total_count, vendors=vendors)
 
+
 async def get_vendor_query(vendor_handler: 'BaseVendor', vendor_id: int):
     db = vendor_handler.db
     query = (
@@ -65,6 +68,7 @@ async def get_vendor_query(vendor_handler: 'BaseVendor', vendor_id: int):
         the_number_of_sold_products=row.sold_products,
         is_active=row.is_active,
     )
+
 
 async def get_vendors_search_query(vendor_handler: 'BaseVendor', vendor_name: Optional[str]):
     db = vendor_handler.db
@@ -92,6 +96,7 @@ async def get_vendors_search_query(vendor_handler: 'BaseVendor', vendor_name: Op
 
     return AllVendors(count=len(vendors), vendors=vendors)
 
+
 async def get_vendors_by_city_query(vendor_handler: 'BaseVendor', city_id: int):
     db = vendor_handler.db
     query = (
@@ -118,6 +123,7 @@ async def get_vendors_by_city_query(vendor_handler: 'BaseVendor', city_id: int):
 
     return AllVendors(vendors=vendors, count=len(vendors))
 
+
 async def get_active_vendors_query(vendor_handler: 'BaseVendor'):
     db = vendor_handler.db
     query = select(Vendors, Enumerations).join(
@@ -138,6 +144,7 @@ async def get_active_vendors_query(vendor_handler: 'BaseVendor'):
     ]
 
     return ActiveVendors(vendors=vendors, count=len(vendors))
+
 
 async def get_active_vendor_by_id_query(vendor_handler: 'BaseVendor', id: int, source: Optional[str]):
     db = vendor_handler.db
@@ -170,23 +177,30 @@ async def get_active_vendor_by_id_query(vendor_handler: 'BaseVendor', id: int, s
 
     return ActiveVendors(vendors=vendors, count=len(vendors))
 
+
 async def create_vendor_handler(vendor_handler: 'BaseVendor', vendor_info: VendorCreate):
     return Message(message="Vendor created successfully")
+
 
 async def create_vendors_multiple_handler(vendor_handler: 'BaseVendor', vendor_infos: List[VendorCreate]):
     return Message(message="Multiple vendors created successfully")
 
+
 async def update_vendor_handler(vendor_handler: 'BaseVendor', vendor_id: int, vendor_info: VendorUpdate):
     return Message(message="Vendor updated successfully")
+
 
 async def update_vendors_multiple_handler(vendor_handler: 'BaseVendor', vendor_infos: List[VendorUpdate]):
     return Message(message="Multiple vendors updated successfully")
 
+
 async def delete_vendor_handler(vendor_handler: 'BaseVendor', vendor_id: int):
     return Message(message="Vendor deleted successfully")
 
+
 async def delete_vendors_multiple_handler(vendor_handler: 'BaseVendor', vendor_ids: List[int]):
     return Message(message="Multiple vendors deleted successfully")
+
 
 async def delete_all_vendors_handler(vendor_handler: 'BaseVendor'):
     return Message(message="All vendors deleted successfully")
