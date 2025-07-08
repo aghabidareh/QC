@@ -18,16 +18,4 @@ logger = logging.getLogger(__name__)
 async def get_profiles(
         db: AsyncSession = Depends(get_db),
 ):
-    query = select(Enumerations).filter(Enumerations.parent_id==5).filter(Enumerations.status==True)
-    result = await db.execute(query)
-    rows = result.scalars().all()
-
-    profiles = [
-        Profile(
-            id=row.id,
-            title=row.title,
-            extra=row.extra,
-        )
-        for row in rows
-    ]
-    return Profiles(profiles=profiles, count=len(profiles))
+    pass
