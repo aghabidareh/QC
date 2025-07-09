@@ -15,7 +15,7 @@ profile_router = APIRouter(prefix="/v1/profiles", tags=["Profiles"])
 logger = logging.getLogger(__name__)
 
 
-@profile_main_router.get('/profiles', response_model=Profiles,
+@profile_router.get('/profiles', response_model=Profiles,
                          description='Get the profiles',
                          status_code=200)
 async def get_profiles(
