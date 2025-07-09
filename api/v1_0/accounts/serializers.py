@@ -2,10 +2,10 @@ from pydantic import BaseModel, field_validator
 import re
 
 class Account(BaseModel):
-    phone: str
+    phone_number: str
     password: str
 
-    @field_validator("phone")
+    @field_validator("phone_number")
     @classmethod
     def validate_phone(cls, value):
         pattern = re.compile(r"^09\d{9}$")
