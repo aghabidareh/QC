@@ -11,7 +11,7 @@ from api.v1_0.profiles.profile_utils import get_profiles_handler
 from api.v1_0.vendors.models import Enumerations
 from api.v1_0.profiles.serializers import Profile, Profiles
 
-profile_main_router = APIRouter(prefix="/v1/profiles", tags=["Profiles"])
+profile_router = APIRouter(prefix="/v1/profiles", tags=["Profiles"])
 logger = logging.getLogger(__name__)
 
 
