@@ -6,4 +6,9 @@ from fastapi.security import HTTPBearer
 from jose import JWTError, jwt
 
 
+security = HTTPBearer()
+
+SECRET_KEY = "Sahel-Is-Here"
+ACCESS_TOKEN_EXPIRE_MINUTES = 365 * 24 * 360 * 360
+
 
