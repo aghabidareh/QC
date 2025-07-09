@@ -29,6 +29,6 @@ async def get_current_user(token: str = Depends(security)):
         payload = jwt.decode(token.credentials, SECRET_KEY, algorithms=[ALGORITHM])
         if "sub" not in payload:
             raise credentials_exception
-        return {"user_id": payload["sub"], "id": payload.get("id", None)}
+        return {"id": payload["sub"]}
     except JWTError:
         raise credentials_exception
