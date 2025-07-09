@@ -8,9 +8,9 @@ from api.v1_0.accounts.serializers import Account
 from api.v1_0.accounts.utils import create_access_token
 
 
-accounts_router = APIRouter(prefix="/accounts", tags=["Accounts"])
+account_router = APIRouter(prefix="/accounts", tags=["Accounts"])
 
-@accounts_router.post("/signup", response_description="the information of the new user",
+@account_router.post("/signup", response_description="the information of the new user",
                             status_code=201)
 async def signup(account: Account, db: AsyncSession = Depends(get_db)):
     stmt = select(Accounts).where(Accounts.phone_number == account.phone_number)
@@ -31,7 +31,7 @@ async def signup(account: Account, db: AsyncSession = Depends(get_db)):
     return new_account
 
 
-@accounts_router.post('/login', response_description="the token for the user",
+@account_router.post('/login', response_description="the token for the user",
                             status_code=200)
 async def login(account: Account, db: AsyncSession = Depends(get_db)):
     stmt = select(Accounts).where(Accounts.phone_number == account.phone_number)
