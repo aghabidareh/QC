@@ -12,3 +12,7 @@ SECRET_KEY = "Sahel-Is-Here"
 ACCESS_TOKEN_EXPIRE_MINUTES = 365 * 24 * 360 * 360
 
 
+def create_access_token(data: dict, expires_delta: timedelta = None):
+    pass
+
+
