@@ -8,5 +8,6 @@ from api.v1_0.accounts.serializers import Account
 from api.v1_0.accounts.utils import create_access_token
 
 
+accounts_router = APIRouter(prefix="/accounts", tags=["Accounts"])
 
 
