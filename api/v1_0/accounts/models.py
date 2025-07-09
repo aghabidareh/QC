@@ -5,4 +5,7 @@ from sqlalchemy.orm import relationship
 from api.database.database import Base
 
 
-
+class Accounts(Base):
+    __tablename__ = 'accounts'
+    
+    pass 
