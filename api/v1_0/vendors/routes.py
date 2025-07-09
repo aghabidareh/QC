@@ -96,7 +96,7 @@ async def get_active_by_id(
     return await get_active_vendor_by_id_query(vendor_handler, id, source)
 
 
-@vendor_router.post("/add", response_model=Message,
+@vendor_router.post("/add-into-qc", response_model=Message,
                     description="Create a new vendor whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
@@ -108,7 +108,7 @@ async def create_vendor(
     return await create_vendor_handler(vendor_handler, vendor_info)
 
 
-@vendor_router.post("/add-multiple", response_model=Message,
+@vendor_router.post("/add-multiple-vendor-into-qc", response_model=Message,
                     description="Add new vendors whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
@@ -120,7 +120,7 @@ async def create_vendors_multiple(
     return await create_vendors_multiple_handler(vendor_handler, vendor_infos)
 
 
-@vendor_router.put("/update/{vendor_id}", response_model=Message,
+@vendor_router.put("/update-qc-vendor/{vendor_id}", response_model=Message,
                    description="Update a specific vendor",
                    response_description="Success Message",
                    status_code=200)
@@ -133,7 +133,7 @@ async def update_vendor(
     return await update_vendor_handler(vendor_handler, vendor_id, vendor_info)
 
 
-@vendor_router.put("/update-multiple", response_model=Message,
+@vendor_router.put("/update-multiple-qc-vendor", response_model=Message,
                    description="Update a specific vendors",
                    response_description="Success Message",
                    status_code=200)
@@ -145,7 +145,7 @@ async def update_vendors_multiple(
     return await update_vendors_multiple_handler(vendor_handler, vendor_infos)
 
 
-@vendor_router.delete("/delete/{vendor_id}", response_model=Message,
+@vendor_router.delete("/delete-qc-vendor/{vendor_id}", response_model=Message,
                       description="Delete a specific vendor",
                       response_description="Success Message",
                       status_code=200)
@@ -157,7 +157,7 @@ async def delete_vendor(
     return await delete_vendor_handler(vendor_handler, vendor_id)
 
 
-@vendor_router.delete("/delete-multiple", response_model=Message,
+@vendor_router.delete("/delete-multiple-qc-vendor", response_model=Message,
                       description="Delete a specific vendors",
                       response_description="Success Message",
                       status_code=200)
@@ -169,7 +169,7 @@ async def delete_vendors_multiple(
     return await delete_vendors_multiple_handler(vendor_handler, vendor_ids)
 
 
-@vendor_router.delete("/delete-all", response_model=Message,
+@vendor_router.delete("/delete-all-qc-vendor", response_model=Message,
                       description="Delete all vendors",
                       response_description="Success Message",
                       status_code=200)
