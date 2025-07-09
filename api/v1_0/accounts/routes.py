@@ -34,4 +34,15 @@ async def signup(account: Account, db: AsyncSession = Depends(get_db)):
 @accounts_router.post('/login', response_description="the token for the user",
                             status_code=200)
 async def login(account: Account, db: AsyncSession = Depends(get_db)):
-    pass
+    stmt = select(Accounts).where(Accounts.phone_number == account.phone_number)
+    result = await db.execute(stmt)
+    existing_owner = result.scalar()
+
+    if not existing_owner:
+        raise HTTPException(status_code=401, detail="شماره تلفن و یا رمز عبور نادرست میباشد.")
+
+    access_token = create_access_token(data={
+        "sub": existing_owner.phone_number,
+    })
+
+    return {"access_token": access_token, "token_type": "bearer"}
