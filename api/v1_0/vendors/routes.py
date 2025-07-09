@@ -96,7 +96,7 @@ async def get_active_by_id(
     return await get_active_vendor_by_id_query(vendor_handler, id, source)
 
 
-@vendor_router.post("/add-into-qc", response_model=Message,
+@vendor_router.post("/add-to-qc", response_model=Message,
                     description="Create a new vendor whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
@@ -108,7 +108,7 @@ async def create_vendor(
     return await create_vendor_handler(vendor_handler, vendor_info)
 
 
-@vendor_router.post("/add-multiple-vendor-into-qc", response_model=Message,
+@vendor_router.post("/add-multiple-vendor-to-qc", response_model=Message,
                     description="Add new vendors whom want to connect to Quick Commerce in Basalam",
                     response_description="Success Message",
                     status_code=201)
