@@ -39,7 +39,7 @@ async def get_vendors(
     return await get_vendors_query(vendor_handler, limit, offset)
 
 
-@vendor_router.get("/{vendor_id}", response_model=SingleVendor,
+@vendor_router.get("/{vendor_id:int}", response_model=SingleVendor,
                    description="Get a specific vendor",
                    response_description="Vendor details",
                    status_code=200)
@@ -74,7 +74,7 @@ async def get_single_by_city_id(
     return await get_vendors_by_city_query(vendor_handler, city_id)
 
 
-@vendor_router.get('/active-vendor-list', response_model=ActiveVendors,
+@vendor_router.get('/active-qc-vendor-list', response_model=ActiveVendors,
                    description='Get all active vendors',
                    status_code=200)
 async def all_actives(
@@ -84,7 +84,7 @@ async def all_actives(
     return await get_active_vendors_query(vendor_handler)
 
 
-@vendor_router.get('/active-vendor-single', response_model=ActiveVendors,
+@vendor_router.get('/active-qc-vendor-single', response_model=ActiveVendors,
                    description='Get the active vendor by id',
                    status_code=200)
 async def get_active_by_id(
