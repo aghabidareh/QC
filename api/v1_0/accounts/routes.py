@@ -30,5 +30,5 @@ async def login():
 
 
 @account_router.get("/callback")
-async def callback():
+async def callback(code: str):
     pass
