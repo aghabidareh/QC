@@ -22,7 +22,7 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
     tokenUrl=TOKEN_URL,
 )
 
-VALIDATE_URL = "https://auth.basalam.dev/token"
+VALIDATE_URL = "https://core.basalam.com/v3/users/me"
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
@@ -130,7 +130,7 @@ async def callback(code: str, state: str, db: AsyncSession = Depends(get_db)):
                 if validate_response.status_code != 200:
                     logger.error(f"Token validation failed: {validate_response.text}")
                     raise HTTPException(status_code=400, detail="Failed to validate token")
-                user_id = validate_response.json().get("user_id", "unknown_user")
+                user_id = validate_response.json().get("id")
 
             await store_tokens(db, user_id, access_token, refresh_token)
             logger.info(f"Tokens stored for user {user_id}")
