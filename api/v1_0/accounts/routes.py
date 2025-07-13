@@ -88,6 +88,7 @@ async def login():
 
 @account_router.get("/callback")
 async def callback(code: str, db: AsyncSession = Depends(get_db)):
+    print(f'code: {code}')
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
