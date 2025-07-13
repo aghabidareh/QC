@@ -79,7 +79,7 @@ async def login():
         "response_type": "code",
         "scope": " ".join(scopes),
     }
-    auth_url = f"{AUTHORIZE_URL}?{urlencode(params)}"
+    auth_url = f"{AUTHORIZE_URL}?sso={urlencode(params)}"
     logger.info(f"Redirecting user to {auth_url}")
     return RedirectResponse(url=auth_url)
 
