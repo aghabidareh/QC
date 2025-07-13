@@ -8,6 +8,6 @@ from api.database.database import Base
 class Accounts(Base):
     __tablename__ = 'accounts'
     
-    user_id = Column(Integer, autoincrement=True, primary_key=True)
+    user_id = Column(String, primary_key=True)
     access_token = Column(String, nullable=False)
     refresh_token = Column(String, nullable=False)
