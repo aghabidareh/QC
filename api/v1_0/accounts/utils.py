@@ -1,14 +1,8 @@
 from datetime import datetime, timedelta
 
 import jwt
-import httpx
-from fastapi import HTTPException, status, Depends
 from fastapi.security import HTTPBearer
-from jose import JWTError, jwt
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from api.database.database import get_db
-from api.v1_0.accounts.routes import oauth2_scheme, VALIDATE_URL
+from jose import jwt
 
 security = HTTPBearer()
 
