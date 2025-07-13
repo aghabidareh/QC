@@ -92,7 +92,7 @@ async def callback(code: str, db: AsyncSession = Depends(get_db)):
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 TOKEN_URL,
-                json={
+                data={
                     "grant_type": "authorization_code",
                     "code": code,
                     "redirect_uri": REDIRECT_URI,
