@@ -27,3 +27,8 @@ async def login():
 
     auth_url = f"{AUTHORIZE_URL}?{urlencode(params)}"
     return RedirectResponse(url=auth_url)
+
+
+@account_router.get("/callback")
+async def callback():
+    pass
