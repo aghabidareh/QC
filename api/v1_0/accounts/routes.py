@@ -54,3 +54,16 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession
             }
     except httpx.HTTPError:
         raise HTTPException(status_code=500, detail="Failed to validate token")
+
+
+async def store_tokens(db: AsyncSession, user_id: str, access_token: str, refresh_token: str | None):
+    result = await db.execute(select(Accounts).where(Accounts.user_id == user_id))
+    user = result.scalars().first()
+    if user:
+        user.access_token = access_token
+        user.refresh_token = refresh_token
+        await db.commit()
+    else:
+        new_user = Accounts(user_id=user_id, access_token=access_token, refresh_token=refresh_token)
+        db.add(new_user)
+        await db.commit()
