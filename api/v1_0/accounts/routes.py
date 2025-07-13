@@ -113,6 +113,7 @@ async def callback(code: str, state: str, db: AsyncSession = Depends(get_db)):
                 raise HTTPException(status_code=400, detail="Failed to obtain access token")
 
             token_data = response.json()
+            logger.error(f'token data: {token_data}')
             access_token = token_data.get("access_token")
             refresh_token = token_data.get("refresh_token")
             user_id = token_data.get("user_id")
