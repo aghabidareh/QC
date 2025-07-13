@@ -85,7 +85,7 @@ async def login():
     logger.info(f"Redirecting user to {auth_url}")
     return RedirectResponse(url=auth_url)
 
-
+@account_router.get("/callback")
 async def callback(code: str, state: str, db: AsyncSession = Depends(get_db)):
     if state != "1":
         logger.error(f"Invalid state parameter: {state}")
