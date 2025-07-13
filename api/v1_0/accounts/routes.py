@@ -72,7 +72,8 @@ async def store_tokens(db: AsyncSession, user_id: str, access_token: str, refres
 
 @account_router.get("/login")
 async def login():
-    scopes = ["vendor.profile.read", "vendor.profile.write", "customer.profile.read", "customer.profile.write", "vendor.product.read", "vendor.product.write"]
+    scopes = ["vendor.profile.read", "vendor.profile.write", "customer.profile.read", "customer.profile.write",
+              "vendor.product.read", "vendor.product.write"]
     params = {
         "client_id": CLIENT_ID,
         "redirect_uri": REDIRECT_URI,
@@ -84,6 +85,7 @@ async def login():
     print(auth_url)
     logger.info(f"Redirecting user to {auth_url}")
     return RedirectResponse(url=auth_url)
+
 
 @account_router.get("/callback")
 async def callback(code: str, state: str, db: AsyncSession = Depends(get_db)):
@@ -174,30 +176,4 @@ async def refresh_token(refresh_token: str, db: AsyncSession = Depends(get_db)):
             return {"access_token": local_token, "token_type": "bearer"}
     except httpx.HTTPError:
         logger.error("HTTP error during token refresh")
-        raise HTTPException(status_code=500, detail="Failed to communicate with auth server")
-
-
-@account_router.get("/client-token")
-async def get_client_token():
-    try:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
-                TOKEN_URL,
-                data={
-                    "grant_type": "client_credentials",
-                    "client_id": CLIENT_ID,
-                    "client_secret": CLIENT_SECRET,
-                    "scope": "customer.wallet:spend.write",
-                },
-            )
-            if response.status_code != 200:
-                logger.error(f"Client token request failed: {response.text}")
-                raise HTTPException(status_code=400, detail="Failed to obtain client token")
-
-            token_data = response.json()
-            access_token = token_data.get("access_token")
-            logger.info("Client token obtained")
-            return {"access_token": access_token, "token_type": "bearer"}
-    except httpx.HTTPError:
-        logger.error("HTTP error during client token request")
         raise HTTPException(status_code=500, detail="Failed to communicate with auth server")
