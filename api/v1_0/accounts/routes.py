@@ -73,7 +73,7 @@ async def store_tokens(db: AsyncSession, user_id: str, access_token: str, refres
 
 @account_router.get("/login")
 async def login():
-    scopes = ["customer.wallet.read", "customer.wallet.write"]
+    scopes = ["vendor.profile.read", "customer.profile.read", "vendor.product.read"]
     params = {
         "client_id": CLIENT_ID,
         "redirect_uri": REDIRECT_URI,
