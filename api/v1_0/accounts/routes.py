@@ -11,7 +11,6 @@ from api.database.database import get_db
 from api.v1_0.accounts.configs import AUTHORIZE_URL, CLIENT_ID, REDIRECT_URI, TOKEN_URL, CLIENT_SECRET
 from api.v1_0.accounts.models import Accounts
 from api.v1_0.accounts.serializers import Account
-from api.v1_0.accounts.utils import create_access_token
 
 account_router = APIRouter(prefix="/accounts", tags=["Accounts"])
 
