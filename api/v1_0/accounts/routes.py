@@ -86,10 +86,15 @@ async def login():
     return RedirectResponse(url=auth_url)
 
 
-@account_router.get("/callback")
-async def callback(code: str, db: AsyncSession = Depends(get_db)):
-    print(f'code: {code}')
+async def callback(code: str, state: str, db: AsyncSession = Depends(get_db)):
+    if state != "1":
+        logger.error(f"Invalid state parameter: {state}")
+        raise HTTPException(status_code=400, detail="Invalid state parameter")
+
     try:
+        logger.info(f"Received callback with code: {code}, state: {state}")
+        logger.info(
+            f"Token request params: grant_type=authorization_code, client_id={CLIENT_ID}, redirect_uri={REDIRECT_URI}")
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 TOKEN_URL,
@@ -100,31 +105,39 @@ async def callback(code: str, db: AsyncSession = Depends(get_db)):
                     "client_id": CLIENT_ID,
                     "client_secret": CLIENT_SECRET,
                 },
-                headers={
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                },
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
             )
-            response.raise_for_status()
+            logger.info(f"Token endpoint response: {response.status_code} - {response.text}")
+            if response.status_code != 200:
+                logger.error(f"Token exchange failed: {response.text}")
+                raise HTTPException(status_code=400, detail="Failed to obtain access token")
 
             token_data = response.json()
-
-            print(f'token data :{token_data}')
-
             access_token = token_data.get("access_token")
             refresh_token = token_data.get("refresh_token")
             user_id = token_data.get("user_id")
 
-            if not access_token or not user_id:
+            if not access_token:
+                logger.error("No access token in response")
                 raise HTTPException(status_code=400, detail="Invalid token response")
+
+            if not user_id:
+                validate_response = await client.get(
+                    VALIDATE_URL,
+                    headers={"Authorization": f"Bearer {access_token}"},
+                )
+                if validate_response.status_code != 200:
+                    logger.error(f"Token validation failed: {validate_response.text}")
+                    raise HTTPException(status_code=400, detail="Failed to validate token")
+                user_id = validate_response.json().get("user_id", "unknown_user")
 
             await store_tokens(db, user_id, access_token, refresh_token)
             logger.info(f"Tokens stored for user {user_id}")
 
             local_token = create_access_token(data={"sub": user_id})
             return {"access_token": local_token, "token_type": "bearer"}
-    except httpx.HTTPError:
-        logger.error("HTTP error during token exchange")
+    except httpx.HTTPError as e:
+        logger.error(f"HTTP error during token exchange: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to communicate with auth server")
 
 
