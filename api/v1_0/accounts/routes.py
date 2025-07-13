@@ -125,7 +125,7 @@ async def callback(code: str, state: str, db: AsyncSession = Depends(get_db)):
             if not user_id:
                 validate_response = await client.get(
                     VALIDATE_URL,
-                    headers={"Authorization": f"Bearer {access_token}"},
+                    headers={"accessToken": f"{access_token}"},
                 )
                 if validate_response.status_code != 200:
                     logger.error(f"Token validation failed: {validate_response.text}")
