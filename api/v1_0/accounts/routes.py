@@ -22,7 +22,7 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
     tokenUrl=TOKEN_URL,
 )
 
-VALIDATE_URL = "https://auth.basalam.com/validate"
+VALIDATE_URL = "https://auth.basalam.dev/token"
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
