@@ -2,33 +2,62 @@ from datetime import datetime, timedelta
 
 import jwt
 from fastapi import HTTPException, status, Depends
-from fastapi.security import HTTPBearer
+from fastapi.security import HTTPBearer, OAuth2AuthorizationCodeBearer
 from jose import JWTError, jwt
+import httpx
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
-security = HTTPBearer()
+from api.v1_0.accounts.configs import AUTHORIZE_URL, TOKEN_URL
+from api.v1_0.accounts.models import Accounts
+from api.v1_0.accounts.routes import VALIDATE_URL
 
-SECRET_KEY = "IT-IS-QC"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 365 * 24 * 360 * 360
-
-
-def create_access_token(data: dict, expires_delta: timedelta = None):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+oauth2_scheme = OAuth2AuthorizationCodeBearer(
+    authorizationUrl=AUTHORIZE_URL,
+    tokenUrl=TOKEN_URL,
+)
 
 
-async def get_current_user(token: str = Depends(security)):
-    credentials_exception = HTTPException(
-        status_code=401,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
     try:
-        payload = jwt.decode(token.credentials, SECRET_KEY, algorithms=[ALGORITHM])
-        if "sub" not in payload:
-            raise credentials_exception
-        return {"phone_number": payload["sub"]}
-    except JWTError:
-        raise credentials_exception
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                VALIDATE_URL,
+                headers={"Authorization": f"Bearer {token}"},
+            )
+            if response.status_code != 200:
+                raise HTTPException(status_code=401, detail="Invalid token")
+
+            token_data = response.json()
+            user_id = token_data.get("user_id")
+            scopes = token_data.get("scope", "").split()
+
+            if not user_id:
+                raise HTTPException(status_code=401, detail="Invalid token: No user_id")
+
+            result = await db.execute(select(Accounts).where(Accounts.user_id == user_id))
+            user = result.scalars().first()
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+
+            return {
+                "user_id": user_id,
+                "scopes": scopes,
+                "client_id": token_data.get("client_id"),
+                "access_token": token,
+            }
+    except httpx.HTTPError:
+        raise HTTPException(status_code=500, detail="Failed to validate token")
+
+
+async def store_tokens(db: AsyncSession, user_id: str, access_token: str, refresh_token: str | None):
+    result = await db.execute(select(Accounts).where(Accounts.user_id == user_id))
+    user = result.scalars().first()
+    if user:
+        user.access_token = access_token
+        user.refresh_token = refresh_token
+        await db.commit()
+    else:
+        new_user = Accounts(user_id=user_id, access_token=access_token, refresh_token=refresh_token)
+        db.add(new_user)
+        await db.commit()
