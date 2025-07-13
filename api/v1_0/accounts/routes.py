@@ -13,7 +13,6 @@ from api.v1_0.accounts.configs import AUTHORIZE_URL, CLIENT_ID, REDIRECT_URI, TO
 from api.v1_0.accounts.models import Accounts
 from api.v1_0.accounts.utils import create_access_token
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 account_router = APIRouter(prefix="/accounts", tags=["Accounts"])
