@@ -3,6 +3,7 @@ from urllib.parse import urlencode
 import httpx
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
+from fastapi.security import OAuth2AuthorizationCodeBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -14,3 +15,9 @@ from api.v1_0.accounts.utils import create_access_token
 
 
 account_router = APIRouter(prefix="/accounts", tags=["Accounts"])
+
+
+oauth2_scheme = OAuth2AuthorizationCodeBearer(
+    authorizationUrl=AUTHORIZE_URL,
+    tokenUrl=TOKEN_URL,
+)
