@@ -77,10 +77,11 @@ async def login():
         "client_id": CLIENT_ID,
         "redirect_uri": REDIRECT_URI,
         "response_type": "code",
-        "scope": "&".join(scopes),
+        "scope": "%20".join(scopes),
         "state": 1
     }
     auth_url = f"{AUTHORIZE_URL}?client_id={params['client_id']}&scope={params['scope']}&redirect_uri={params['redirect_uri']}&state={params['state']}"
+    print(auth_url)
     logger.info(f"Redirecting user to {auth_url}")
     return RedirectResponse(url=auth_url)
 
@@ -131,7 +132,7 @@ async def callback(code: str, state: str, db: AsyncSession = Depends(get_db)):
                     raise HTTPException(status_code=400, detail="Failed to validate token")
                 user_id = validate_response.json().get("id")
 
-            await store_tokens(db, user_id, access_token, refresh_token)
+            await store_tokens(db, str(user_id), access_token, refresh_token)
             logger.info(f"Tokens stored for user {user_id}")
 
             local_token = create_access_token(data={"sub": user_id})
