@@ -81,7 +81,6 @@ async def login():
         "state": 1
     }
     auth_url = f"{AUTHORIZE_URL}?client_id={params['client_id']}&scope={params['scope']}&redirect_uri={params['redirect_uri']}&state={params['state']}"
-    print(auth_url)
     logger.info(f"Redirecting user to {auth_url}")
     return RedirectResponse(url=auth_url)
 
