@@ -80,13 +80,16 @@ async def login():
         "scope": "&".join(scopes),
         "state": 1
     }
-    auth_url = f"{AUTHORIZE_URL}?{urlencode(params)}"
+    auth_url = f"{AUTHORIZE_URL}?client_id={params['client_id']}&scope={params['scope']}&redirect_uri={params['redirect_uri']}&state={params['state']}"
+    print(auth_url)
     logger.info(f"Redirecting user to {auth_url}")
     return RedirectResponse(url=auth_url)
 
 
 @account_router.get("/callback")
 async def callback(code: str, db: AsyncSession = Depends(get_db)):
+    print(f'code: {code}')
+    print('callback touched')
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
