@@ -105,9 +105,7 @@ async def callback(code: str, db: AsyncSession = Depends(get_db)):
                     "Accept": "application/json",
                 },
             )
-            if response.status_code != 200:
-                logger.error(f"Token exchange failed: {response.text}")
-                raise HTTPException(status_code=400, detail="Failed to obtain access token")
+            response.raise_for_status()
 
             token_data = response.json()
 
