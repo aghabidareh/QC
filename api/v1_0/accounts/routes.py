@@ -77,9 +77,10 @@ async def login():
         "client_id": CLIENT_ID,
         "redirect_uri": REDIRECT_URI,
         "response_type": "code",
-        "scope": " ".join(scopes),
+        "scope": "&".join(scopes),
+        "state": 1
     }
-    auth_url = f"{AUTHORIZE_URL}?sso={urlencode(params)}"
+    auth_url = f"{AUTHORIZE_URL}?{urlencode(params)}"
     logger.info(f"Redirecting user to {auth_url}")
     return RedirectResponse(url=auth_url)
 
