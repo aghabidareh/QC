@@ -88,18 +88,20 @@ async def login():
 
 @account_router.get("/callback")
 async def callback(code: str, db: AsyncSession = Depends(get_db)):
-    print(f'code: {code}')
-    print('callback touched')
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(
                 TOKEN_URL,
-                data={
+                json={
                     "grant_type": "authorization_code",
                     "code": code,
                     "redirect_uri": REDIRECT_URI,
                     "client_id": CLIENT_ID,
                     "client_secret": CLIENT_SECRET,
+                },
+                headers={
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
                 },
             )
             if response.status_code != 200:
