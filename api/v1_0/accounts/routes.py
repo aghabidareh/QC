@@ -10,3 +10,7 @@ from api.v1_0.accounts.utils import create_access_token
 
 account_router = APIRouter(prefix="/accounts", tags=["Accounts"])
 
+
+@account_router.get("/login")
+async def login():
+    pass
