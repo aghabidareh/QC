@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from fastapi import FastAPI, applications, Request, HTTPException, status
@@ -24,15 +25,23 @@ app = FastAPI(title="QC",
               description="API for QC(q-commerce) project for basalam",
               version="1.0", )
 
+logger = logging.getLogger(__name__)
+
 
 @app.middleware("https")
 async def auth_middleware(request: Request, call_next):
-    public_paths = ["/", "/hello/", "/docs", "/redoc", "/openapi.json", "/static"]
+    print('middleware touched')
+    public_paths = ["/", "/docs", "/redoc", "/openapi.json", "/static"]
     if any(request.url.path.startswith(path) for path in public_paths):
+        logger.debug(f"Skipping authentication for path: {request.url.path}")
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")
+    print(f'Auth header: {auth_header}')
+    logger.debug(f"Authorization header: {auth_header}")
+
     if not auth_header:
+        logger.error("Missing Authorization header")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authorization header missing",
@@ -41,6 +50,7 @@ async def auth_middleware(request: Request, call_next):
 
     token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else auth_header
     cache_key = "who-am-i:" + token
+    logger.debug(f"Processing token: {token}")
 
     try:
         current_time = time.time()
@@ -48,27 +58,36 @@ async def auth_middleware(request: Request, call_next):
             cached_data = token_cache[cache_key]
             if cached_data["expiry"] > current_time:
                 user = cached_data["user"]
+                logger.debug(f"Cache hit for user: {user.id}")
             else:
+                logger.debug("Cache expired, removing entry")
                 del token_cache[cache_key]
                 user = None
         else:
+            logger.debug("No cache entry found")
             user = None
 
         if not user:
+            logger.debug("Validating token with auth_sdk")
             user = await auth.who_am_i(token)
             if not user:
+                logger.error("Token validation failed: Invalid or expired token")
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Invalid or expired token",
                     headers={"WWW-Authenticate": "Bearer"},
                 )
+            logger.debug(f"Token validated, user: {user.id}")
             token_cache[cache_key] = {
                 "user": user,
                 "expiry": current_time + DEFAULT_CACHE_TTL_IN_SECONDS
             }
 
         request.state.user = user
+    except HTTPException:
+        raise
     except Exception as e:
+        logger.error(f"Authentication error: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authentication failed",
@@ -122,6 +141,7 @@ async def test_auth(request: Request):
         # "scopes": user.scopes,
         # "roles": user.roles
     }
+
 
 BASE_DIR = Path(__file__).resolve().parent
 static_path = os.path.join(BASE_DIR, 'resources')
