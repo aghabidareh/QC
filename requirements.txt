@@ -21,3 +21,4 @@ pandas
 xlrd
 --extra-index-url https://repo.basalam.dev/artifactory/api/pypi/basalam-pypi-local/simple
 backbone-auth-sdk
+redis
