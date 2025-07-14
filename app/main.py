@@ -42,7 +42,11 @@ async def auth_middleware(request: Request, call_next):
 
     if not auth_header:
         logger.error(f"Missing Authorization header for {request.url.path}")
-        return {"message" : "you are not authorized in basalam"}
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else auth_header
     cache_key = "who-am-i:" + token
@@ -68,7 +72,11 @@ async def auth_middleware(request: Request, call_next):
             user = await auth.who_am_i(token)
             if not user:
                 logger.error(f"Token validation failed for {request.url.path}: Invalid or expired token")
-                return {"message" : "you are not authorized in basalam"}
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid or expired token",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
             logger.debug(f"Token validated, user: {user.id}")
             token_cache[cache_key] = {
                 "user": user,
