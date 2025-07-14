@@ -26,7 +26,8 @@ app = FastAPI(title="QC",
 
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
-    pass
+    if request.url.path.startswith(("/docs", "/redoc", "/openapi.json", "/static")):
+        return await call_next(request)
 
 
 "Routes will be defined here"
