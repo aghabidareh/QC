@@ -115,12 +115,12 @@ async def say_hello(name: str):
 
 @app.get("/test-auth")
 async def test_auth(request: Request):
-    user = request.state.user
+    # user = request.state.user
     return {
         "message": "Authenticated successfully",
-        "user_id": user.id,
-        "scopes": user.scopes,
-        "roles": user.roles
+        # "user_id": user.id,
+        # "scopes": user.scopes,
+        # "roles": user.roles
     }
 
 BASE_DIR = Path(__file__).resolve().parent
