@@ -74,6 +74,9 @@ async def auth_middleware(request: Request, call_next):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    response = await call_next(request)
+    return response
+
 
 "Routes will be defined here"
 app.include_router(vendor_router)
