@@ -44,12 +44,11 @@ async def auth_middleware(request: Request, call_next):
     if not auth_header:
         print('line 43 touched')
         logger.error("Missing Authorization header")
-        return {"message": "Missing Authorization header", 'status': status.HTTP_401_UNAUTHORIZED}
-        # raise HTTPException(
-        #     status_code=status.HTTP_401_UNAUTHORIZED,
-        #     detail="Authorization header missing",
-        #     headers={"WWW-Authenticate": "Bearer"},
-        # )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authorization header missing",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else auth_header
     cache_key = "who-am-i:" + token
