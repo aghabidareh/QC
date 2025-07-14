@@ -30,19 +30,15 @@ logger = logging.getLogger(__name__)
 
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
-    print('middleware started')
     public_paths = ["/", "/docs", "/redoc", "/openapi.json", "/static"]
     if any(request.url.path.startswith(path) for path in public_paths):
-        print('line 36 touched')
         logger.debug(f"Skipping authentication for path: {request.url.path}")
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")
-    print('line 41 touched')
     logger.debug(f"Authorization header: {auth_header}")
 
     if not auth_header:
-        print('line 43 touched')
         logger.error("Missing Authorization header")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -54,34 +50,25 @@ async def auth_middleware(request: Request, call_next):
     cache_key = "who-am-i:" + token
     logger.debug(f"Processing token: {token}")
 
-    print('line 57 touched')
-
     try:
-        print('line 60 touched')
         current_time = time.time()
         if cache_key in token_cache:
-            print('line 63 touched')
             cached_data = token_cache[cache_key]
             if cached_data["expiry"] > current_time:
-                print('line 66 touched')
                 user = cached_data["user"]
                 logger.debug(f"Cache hit for user: {user.id}")
             else:
-                print('line 70 touched')
                 logger.debug("Cache expired, removing entry")
                 del token_cache[cache_key]
                 user = None
         else:
-            print('line 75 touched')
             logger.debug("No cache entry found")
             user = None
 
         if not user:
-            print('line 80 touched')
             logger.debug("Validating token with auth_sdk")
             user = await auth.who_am_i(token)
             if not user:
-                print('line 84 touched')
                 logger.error("Token validation failed: Invalid or expired token")
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
@@ -96,10 +83,8 @@ async def auth_middleware(request: Request, call_next):
 
         request.state.user = user
     except HTTPException:
-        print('line 99 touched')
         raise
     except Exception as e:
-        print('line 102 touched')
         logger.error(f"Authentication error: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -108,7 +93,6 @@ async def auth_middleware(request: Request, call_next):
         )
 
     response = await call_next(request)
-    print('middleware ended')
     return response
 
 
