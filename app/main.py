@@ -42,11 +42,7 @@ async def auth_middleware(request: Request, call_next):
 
     if not auth_header:
         logger.error(f"Missing Authorization header for {request.url.path}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authorization header missing",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        return {"message" : "you are not authorized in basalam"}
 
     token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else auth_header
     cache_key = "who-am-i:" + token
