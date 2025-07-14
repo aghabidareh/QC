@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import FastAPI, applications, Request
+from fastapi import FastAPI, applications, Request, HTTPException, status
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
 import os
@@ -28,6 +28,16 @@ app = FastAPI(title="QC",
 async def auth_middleware(request: Request, call_next):
     if request.url.path.startswith(("/docs", "/redoc", "/openapi.json", "/static")):
         return await call_next(request)
+
+    auth_header = request.headers.get("Authorization")
+    if not auth_header:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authorization header missing",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
 
 
 "Routes will be defined here"
