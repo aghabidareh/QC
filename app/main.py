@@ -37,7 +37,6 @@ async def auth_middleware(request: Request, call_next):
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")
-    print(f'Auth header: {auth_header}')
     logger.debug(f"Authorization header: {auth_header}")
 
     if not auth_header:
@@ -95,6 +94,7 @@ async def auth_middleware(request: Request, call_next):
         )
 
     response = await call_next(request)
+    print('middleware touched and ended up')
     return response
 
 
