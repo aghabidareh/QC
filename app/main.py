@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import FastAPI, applications
+from fastapi import FastAPI, applications, Request
 from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.staticfiles import StaticFiles
 import os
@@ -12,7 +12,6 @@ from api.v1_0.vendors.routes import vendor_router
 
 from backbone_auth_sdk.auth_sdk import AsyncAuth
 
-
 token_cache = {}
 DEFAULT_CACHE_TTL_IN_SECONDS = 365 * 24 * 60 * 60
 
@@ -23,6 +22,12 @@ auth = AsyncAuth(
 app = FastAPI(title="QC",
               description="API for QC(q-commerce) project for basalam",
               version="1.0", )
+
+
+@app.middleware("http")
+async def auth_middleware(request: Request, call_next):
+    pass
+
 
 "Routes will be defined here"
 app.include_router(vendor_router)
