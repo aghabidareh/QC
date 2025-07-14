@@ -31,11 +31,11 @@ logger = logging.getLogger(__name__)
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
     print('middleware started')
-    public_paths = ["/", "/docs", "/redoc", "/openapi.json", "/static"]
-    if any(request.url.path.startswith(path) for path in public_paths):
-        print('line 36 touched')
-        logger.debug(f"Skipping authentication for path: {request.url.path}")
-        return await call_next(request)
+    # public_paths = ["/", "/docs", "/redoc", "/openapi.json", "/static"]
+    # if any(request.url.path.startswith(path) for path in public_paths):
+    #     print('line 36 touched')
+    #     logger.debug(f"Skipping authentication for path: {request.url.path}")
+    #     return await call_next(request)
 
     auth_header = request.headers.get("Authorization")
     print('line 41 touched')
