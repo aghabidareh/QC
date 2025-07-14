@@ -28,7 +28,7 @@ app = FastAPI(title="QC",
 logger = logging.getLogger(__name__)
 
 
-@app.middleware("https")
+@app.middleware("http")
 async def auth_middleware(request: Request, call_next):
     print('middleware touched')
     public_paths = ["/", "/docs", "/redoc", "/openapi.json", "/static"]
