@@ -27,7 +27,8 @@ app = FastAPI(title="QC",
 
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
-    if request.url.path.startswith(("/docs", "/redoc", "/openapi.json", "/static")):
+    public_paths = ["/", "/hello/", "/docs", "/redoc", "/openapi.json", "/static"]
+    if any(request.url.path.startswith(path) for path in public_paths):
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")
