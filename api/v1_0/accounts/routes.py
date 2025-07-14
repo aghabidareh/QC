@@ -10,6 +10,8 @@ from api.v1_0.accounts.utils import create_access_token
 
 account_router = APIRouter(prefix="/accounts", tags=["Accounts"])
 
+print('hi')
+
 @account_router.post("/signup", response_description="the information of the new user",
                             status_code=201)
 async def signup(account: Account, db: AsyncSession = Depends(get_db)):
