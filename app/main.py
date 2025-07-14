@@ -10,6 +10,16 @@ from api.database.database import database
 from api.v1_0.profiles.routes import profile_router
 from api.v1_0.vendors.routes import vendor_router
 
+from backbone_auth_sdk.auth_sdk import AsyncAuth
+
+
+token_cache = {}
+DEFAULT_CACHE_TTL_IN_SECONDS = 365 * 24 * 60 * 60
+
+auth = AsyncAuth(
+    secret=os.getenv("BASALAM_AUTH_SECRET"),
+)
+
 app = FastAPI(title="QC",
               description="API for QC(q-commerce) project for basalam",
               version="1.0", )
