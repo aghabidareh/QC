@@ -11,6 +11,7 @@ from api.v1_0.profiles.routes import profile_router
 from api.v1_0.vendors.routes import vendor_router
 
 from backbone_auth_sdk.auth_sdk import AsyncAuth
+import time
 
 token_cache = {}
 DEFAULT_CACHE_TTL_IN_SECONDS = 365 * 24 * 60 * 60
@@ -40,7 +41,38 @@ async def auth_middleware(request: Request, call_next):
     token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else auth_header
     cache_key = "who-am-i:" + token
 
+    try:
+        current_time = time.time()
+        if cache_key in token_cache:
+            cached_data = token_cache[cache_key]
+            if cached_data["expiry"] > current_time:
+                user = cached_data["user"]
+            else:
+                del token_cache[cache_key]
+                user = None
+        else:
+            user = None
 
+        if not user:
+            user = await auth.who_am_i(token)
+            if not user:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Invalid or expired token",
+                    headers={"WWW-Authenticate": "Bearer"},
+                )
+            token_cache[cache_key] = {
+                "user": user,
+                "expiry": current_time + DEFAULT_CACHE_TTL_IN_SECONDS
+            }
+
+        request.state.user = user
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authentication failed",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 
 "Routes will be defined here"
