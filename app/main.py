@@ -30,16 +30,18 @@ logger = logging.getLogger(__name__)
 
 @app.middleware("http")
 async def auth_middleware(request: Request, call_next):
-    public_paths = ["/", "/docs", "/redoc", "/openapi.json", "/static"]
+    logger.debug(f"Processing request: {request.method} {request.url.path}")
+
+    public_paths = ["/docs", "/redoc", "/openapi.json", "/static"]
     if any(request.url.path.startswith(path) for path in public_paths):
-        logger.debug(f"Skipping authentication for path: {request.url.path}")
+        logger.debug(f"Skipping authentication for public path: {request.url.path}")
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")
     logger.debug(f"Authorization header: {auth_header}")
 
     if not auth_header:
-        logger.error("Missing Authorization header")
+        logger.error(f"Missing Authorization header for {request.url.path}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authorization header missing",
@@ -69,7 +71,7 @@ async def auth_middleware(request: Request, call_next):
             logger.debug("Validating token with auth_sdk")
             user = await auth.who_am_i(token)
             if not user:
-                logger.error("Token validation failed: Invalid or expired token")
+                logger.error(f"Token validation failed for {request.url.path}: Invalid or expired token")
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     detail="Invalid or expired token",
@@ -82,10 +84,11 @@ async def auth_middleware(request: Request, call_next):
             }
 
         request.state.user = user
+        logger.debug(f"User {user.id} authenticated for {request.url.path}")
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Authentication error: {str(e)}")
+        logger.error(f"Authentication error for {request.url.path}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Authentication failed",
@@ -121,8 +124,9 @@ async def shutdown():
 
 
 @app.get("/")
-async def root():
-    return {"message": "QC"}
+async def root(request: Request):
+    user = request.state.user
+    return {"message": "QC", "user": user}
 
 
 @app.get("/hello/{name}")
