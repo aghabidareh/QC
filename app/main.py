@@ -37,6 +37,9 @@ async def auth_middleware(request: Request, call_next):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    token = auth_header.replace("Bearer ", "") if auth_header.startswith("Bearer ") else auth_header
+    cache_key = "who-am-i:" + token
+
 
 
 
