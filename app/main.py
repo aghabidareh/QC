@@ -37,7 +37,7 @@ async def auth_middleware(request: Request, call_next):
         logger.debug(f"Skipping authentication for public path: {request.url.path}")
         return await call_next(request)
 
-    auth_header = request.cookies.get("Authorization")
+    auth_header = request.cookies.get("accessToken")
     logger.debug(f"Authorization header: {auth_header}")
 
     if not auth_header:
